@@ -1,5 +1,7 @@
 'use strict';
 
-module.exports = {
-  // TODO: source files here
-};
+const main = require('./src/main');
+
+if(require.main === module) {
+  main(process.argv);
+}

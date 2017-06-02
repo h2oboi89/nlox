@@ -1,7 +1,7 @@
 {
   "name": "nlox",
   "version": "0.0.0",
-  "description": "lox interpreter written in Node JS",
+  "description": "Lox interpreter written in Node JS",
   "main": "index.js",
   "scripts": {
     "test": "gulp",

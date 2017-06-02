@@ -1,6 +1,8 @@
 # [nlox](https://github.com/h2oboi89/nlox)
 
-TODO: description
+Lox interpreter written in Node JS.
+
+Based on http://craftinginterpreters.com/
 
 ## Setup
 - Run `npm install` to install all dependencies
