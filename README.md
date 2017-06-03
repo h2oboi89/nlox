@@ -13,4 +13,4 @@ Following are called via `npm run`:
 - `test -- -i` same as `test` but ignores linter warnings
 - `docClone` to clone your documentation repository
 - `docGenerate` to generate documentation locally
-- ~~`docPublish` to generate and publish documentation on GitHub Pages~~
+- `docPublish` to generate and publish documentation on GitHub Pages

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "gulp",
     "docClone": "jsdocgen clone",
-    "docGenerate": "jsdocgen generate"
+    "docGenerate": "jsdocgen generate",
+    "docPublish": "jsdocgen publish"
   },
   "repository": {
     "type": "git",

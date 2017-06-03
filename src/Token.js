@@ -1,6 +1,19 @@
 'use strict';
 
+/**
+ * Represents a scanned lexeme of Lox source code.
+ */
 class Token {
+
+  /**
+   * Creates a new token.
+   *
+   * @param  {TokenType} type This tokens type. Used by the {@link Parser}.
+   * @param  {string} lexeme  Section of source code this token was parsed from.
+   * @param  {string|number} literal   If a token represents a literal, this will be the extracted value.
+   * @param  {number} line      Identifies which line of the source code this token was parsed from.
+   * @return {Token}
+   */
   constructor(type, lexeme, literal, line) {
     // TODO: ensure type is a TokenType?
     this._type = type;
@@ -9,6 +22,11 @@ class Token {
     this._line = line;
   }
 
+  /**
+   * Returns a string representing the token.
+   *
+   * @return {string}  A string representing the object.
+   */
   toString() {
     return `${this._type} ${this._lexeme} ${this._literal}`;
   }

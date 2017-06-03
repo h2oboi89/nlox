@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Command line options for the Lox interpreter
+ */
 const options = [{
     name: 'help',
     description: 'print this usage guide',
@@ -21,9 +24,8 @@ const sections = [{
   {
     header: 'Synopsis',
     content: [
-      '$ nlox',
-      '$ nlox main.lox',
-      '$ nlox -h'
+      '$ nlox               <- opens lox REPL',
+      '$ nlox <source file> <- executes lox source file (ie: main.lox)',
     ]
   },
   {

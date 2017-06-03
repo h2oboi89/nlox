@@ -2,6 +2,11 @@
 
 const Enum = require('enum');
 
+
+/**
+ * {@link Token} type enumerations.
+ * @enum
+ */
 const TokenType = new Enum([
   // Single-character tokens.
   'LEFT_PAREN', 'RIGHT_PAREN', 'LEFT_BRACE', 'RIGHT_BRACE',

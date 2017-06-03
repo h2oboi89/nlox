@@ -22,6 +22,10 @@ const KEYWORDS = {
   'while': TokenType.WHILE
 };
 
+
+/**
+ * Converts Lox source code into a series of {@link Token}s.
+ */
 class Scanner {
   _isAtEnd() {
     return this._current >= this._source.length;
@@ -59,6 +63,17 @@ class Scanner {
     }
     else {
       return this._source[this._current + ahead];
+    }
+  }
+
+  _slash() {
+    if(this._match('/')) {
+      while(this._peek() !== '\n' && !this._isAtEnd()) {
+        this._advance();
+      }
+    }
+    else {
+      this._addToken(TokenType.SLASH);
     }
   }
 
@@ -174,14 +189,7 @@ class Scanner {
         this._addToken(this._match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
         break;
       case '/':
-        if(this._match('/')) {
-          while(this._peek() !== '\n' && !this._isAtEnd()) {
-            this._advance();
-          }
-        }
-        else {
-          this._addToken(TokenType.SLASH);
-        }
+        this._slash();
         break;
       case ' ':
         break;
@@ -195,8 +203,8 @@ class Scanner {
       case '\'':
         this._string('\'');
         break;
-      case '"':
-        this._string('"');
+      case '\"':
+        this._string('\"');
         break;
       default:
         if(Scanner._isDigit(c)) {
@@ -212,6 +220,14 @@ class Scanner {
     }
   }
 
+
+  /**
+   * Scans source and converts it into {@link Token}s.
+   * Will report errors using {@link LoxError}.
+   *
+   * @param  {string} source Lox source code.
+   * @return {Token[]} Scanned source code.
+   */
   scanTokens(source) {
     this._source = source;
     this._tokens = [];
