@@ -259,7 +259,7 @@ describe('Scanner', () => {
     });
   });
 
-  describe('should handle complicated input', () => {
+  describe('should scan complicated input', () => {
     it('Section 4.6', () => {
       const source = [
         '// this is a comment',
@@ -289,7 +289,7 @@ describe('Scanner', () => {
     });
   });
 
-  describe('should handle strings', () => {
+  describe('should scan strings', () => {
     it('single quote (\') string', () => {
       expect(scanner.scanTokens('\'Hello, World!\'')).toEqual([
         new Token(TokenType.STRING, '\'Hello, World!\'', 'Hello, World!', 1),
@@ -336,6 +336,70 @@ describe('Scanner', () => {
     it('should reject unterminated strings', () => {
       mockLoxError.error.shouldBeCalledWith(1, 'Unterminated string: \"you\'re hired!')
         .when(() => scanner.scanTokens('\"you\'re hired!'));
+    });
+  });
+
+  describe('should scan numbers', () => {
+    it('integers', () => {
+      expect(scanner.scanTokens('0 1 2 3 4 5 6 7 8 9')).toEqual([
+        new Token(TokenType.NUMBER, '0', 0, 1),
+        new Token(TokenType.NUMBER, '1', 1, 1),
+        new Token(TokenType.NUMBER, '2', 2, 1),
+        new Token(TokenType.NUMBER, '3', 3, 1),
+        new Token(TokenType.NUMBER, '4', 4, 1),
+        new Token(TokenType.NUMBER, '5', 5, 1),
+        new Token(TokenType.NUMBER, '6', 6, 1),
+        new Token(TokenType.NUMBER, '7', 7, 1),
+        new Token(TokenType.NUMBER, '8', 8, 1),
+        new Token(TokenType.NUMBER, '9', 9, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('00 10 0100 123456789')).toEqual([
+        new Token(TokenType.NUMBER, '00', 0, 1),
+        new Token(TokenType.NUMBER, '10', 10, 1),
+        new Token(TokenType.NUMBER, '0100', 100, 1),
+        new Token(TokenType.NUMBER, '123456789', 123456789, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('floats', () => {
+      expect(scanner.scanTokens('0.0 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0')).toEqual([
+        new Token(TokenType.NUMBER, '0.0', 0, 1),
+        new Token(TokenType.NUMBER, '1.0', 1, 1),
+        new Token(TokenType.NUMBER, '2.0', 2, 1),
+        new Token(TokenType.NUMBER, '3.0', 3, 1),
+        new Token(TokenType.NUMBER, '4.0', 4, 1),
+        new Token(TokenType.NUMBER, '5.0', 5, 1),
+        new Token(TokenType.NUMBER, '6.0', 6, 1),
+        new Token(TokenType.NUMBER, '7.0', 7, 1),
+        new Token(TokenType.NUMBER, '8.0', 8, 1),
+        new Token(TokenType.NUMBER, '9.0', 9, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('00.0 10.0 01.00 1234.56789')).toEqual([
+        new Token(TokenType.NUMBER, '00.0', 0, 1),
+        new Token(TokenType.NUMBER, '10.0', 10, 1),
+        new Token(TokenType.NUMBER, '01.00', 1, 1),
+        new Token(TokenType.NUMBER, '1234.56789', 1234.56789, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('but not invalid ones', () => {
+      expect(scanner.scanTokens(".0")).toEqual([
+        new Token(TokenType.DOT, '.', undefined, 1),
+        new Token(TokenType.NUMBER, '0', 0, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens("0.")).toEqual([
+        new Token(TokenType.NUMBER, '0', 0, 1),
+        new Token(TokenType.DOT, '.', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
     });
   });
 

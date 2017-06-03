@@ -31,12 +31,16 @@ class Scanner {
     return true;
   }
 
-  _peek() {
-    if(this._current >= this._source.length) {
+  _peek(ahead) {
+    if (ahead === undefined) {
+      ahead = 0;
+    }
+
+    if(this._current + ahead >= this._source.length) {
       return '\0';
     }
     else {
-      return this._source[this._current];
+      return this._source[this._current + ahead];
     }
   }
 
@@ -59,6 +63,28 @@ class Scanner {
     const stringLiteral = this._source.slice(this._start + 1, this._current - 1);
 
     this._addToken(TokenType.STRING, stringLiteral);
+  }
+
+  _isDigit(c) {
+    return c >= '0' && c <= '9';
+  }
+
+  _consumeNumber() {
+    while(this._isDigit(this._peek())) {
+      this._advance();
+    }
+  }
+
+  _number() {
+    this._consumeNumber();
+
+    if(this._peek() === '.' && this._isDigit(this._peek(1))) {
+      this._advance();
+
+      this._consumeNumber();
+    }
+
+    this._addToken(TokenType.NUMBER, parseFloat(this._source.slice(this._start, this._current)));
   }
 
   _scanToken() {
@@ -133,7 +159,12 @@ class Scanner {
         this._string('"');
         break;
       default:
-        LoxError.error(this._line, `Unexpected character: '${c}'`);
+        if(this._isDigit(c)) {
+          this._number();
+        }
+        else {
+          LoxError.error(this._line, `Unexpected character: '${c}'`);
+        }
         break;
     }
   }
