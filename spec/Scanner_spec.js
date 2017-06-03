@@ -252,30 +252,30 @@ describe('Scanner', () => {
 
   describe('should handle complicated input', () => {
     it('Section 4.6', () => {
-      const source = `
-        // this is a comment
-        (( )){} // grouping stuff
-        !*+-/=<> <= == // operators
-      `;
+      const source = [
+        '// this is a comment',
+        '(( )){} // grouping stuff',
+        '!*+-/=<> <= == // operators'
+      ];
 
-      expect(scanner.scanTokens(source)).toEqual([
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 3),
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 3),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 3),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 3),
-        new Token(TokenType.LEFT_BRACE, '{', undefined, 3),
-        new Token(TokenType.RIGHT_BRACE, '}', undefined, 3),
-        new Token(TokenType.BANG, '!', undefined, 4),
-        new Token(TokenType.STAR, '*', undefined, 4),
-        new Token(TokenType.PLUS, '+', undefined, 4),
-        new Token(TokenType.MINUS, '-', undefined, 4),
-        new Token(TokenType.SLASH, '/', undefined, 4),
-        new Token(TokenType.EQUAL, '=', undefined, 4),
-        new Token(TokenType.LESS, '<', undefined, 4),
-        new Token(TokenType.GREATER, '>', undefined, 4),
-        new Token(TokenType.LESS_EQUAL, '<=', undefined, 4),
-        new Token(TokenType.EQUAL_EQUAL, '==', undefined, 4),
-        new Token(TokenType.EOF, '', undefined, 5)
+      expect(scanner.scanTokens(source.join('\n'))).toEqual([
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
+        new Token(TokenType.LEFT_BRACE, '{', undefined, 2),
+        new Token(TokenType.RIGHT_BRACE, '}', undefined, 2),
+        new Token(TokenType.BANG, '!', undefined, 3),
+        new Token(TokenType.STAR, '*', undefined, 3),
+        new Token(TokenType.PLUS, '+', undefined, 3),
+        new Token(TokenType.MINUS, '-', undefined, 3),
+        new Token(TokenType.SLASH, '/', undefined, 3),
+        new Token(TokenType.EQUAL, '=', undefined, 3),
+        new Token(TokenType.LESS, '<', undefined, 3),
+        new Token(TokenType.GREATER, '>', undefined, 3),
+        new Token(TokenType.LESS_EQUAL, '<=', undefined, 3),
+        new Token(TokenType.EQUAL_EQUAL, '==', undefined, 3),
+        new Token(TokenType.EOF, '', undefined, 3)
       ]);
     });
   });
