@@ -107,6 +107,7 @@ class Scanner {
         break;
       default:
         LoxError.error(this._line, `Unexpected character: '${c}'`);
+        break;
     }
   }
 
@@ -123,7 +124,7 @@ class Scanner {
     }
 
     this._tokens.push(new Token(TokenType.EOF, '', undefined, this._line));
-    
+
     return this._tokens;
   }
 }
