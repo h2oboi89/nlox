@@ -6,9 +6,10 @@ describe('Scanner', () => {
 
   const Token = require('../src/Token');
   const TokenType = require('../src/TokenType');
-  const LoxError = require('../src/LoxError');
 
-  const mockLoxError = mach.mockObject(LoxError);
+  const mockLoxError = mach.mockObject({
+    error: () => {}
+  });
 
   const Scanner = proxyquire('../src/Scanner', {
     './LoxError': mockLoxError

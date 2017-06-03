@@ -37,7 +37,7 @@ function runPrompt() {
   rl.on('line', (line) => {
     run(line);
 
-    LoxError.hadError = false;
+    LoxError.reset();
 
     rl.prompt();
   }).on('close', () => {
