@@ -2,22 +2,27 @@
 
 const commandLineArgs = require('command-line-args');
 const commandLineUsage = require('command-line-usage');
-const options = require('./options');
-
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const readline = require('readline');
 const util = require('util');
 
+const options = require('./options');
+const LoxError = require('./LoxError');
+const Scanner = require('./Scanner');
+
 function run(source) {
-  console.log(`source:${os.EOL}${source}`);
-  // const scanner = new Scanner(source);
-  // const tokens = scanner.scanTokens();
-  //
-  // for(let token of tokens) {
-  //   console.log(token);
-  // }
+  if(LoxError.hadError) {
+    process.exit(65);
+  }
+  else {
+    const scanner = new Scanner(source);
+    const tokens = scanner.scanTokens();
+
+    for(let token of tokens) {
+      console.log(token.toString());
+    }
+  }
 }
 
 function runPrompt() {
@@ -30,6 +35,8 @@ function runPrompt() {
 
   rl.on('line', (line) => {
     run(line);
+
+    LoxError.hadError = false;
 
     rl.prompt();
   }).on('close', () => {
