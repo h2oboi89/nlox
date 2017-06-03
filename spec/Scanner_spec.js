@@ -1,9 +1,18 @@
 'use strict';
 
 describe('Scanner', () => {
-  const Scanner = require('../src/Scanner');
+  const mach = require('mach.js');
+  const proxyquire = require('proxyquire');
+
   const Token = require('../src/Token');
   const TokenType = require('../src/TokenType');
+  const LoxError = require('../src/LoxError');
+
+  const mockLoxError = mach.mockObject(LoxError);
+
+  const Scanner = proxyquire('../src/Scanner', {
+    './LoxError': mockLoxError
+  });
 
   const scanner = new Scanner();
 
@@ -277,6 +286,56 @@ describe('Scanner', () => {
         new Token(TokenType.EQUAL_EQUAL, '==', undefined, 3),
         new Token(TokenType.EOF, '', undefined, 3)
       ]);
+    });
+  });
+
+  describe('should handle strings', () => {
+    it('single quote (\') string', () => {
+      expect(scanner.scanTokens('\'Hello, World!\'')).toEqual([
+        new Token(TokenType.STRING, '\'Hello, World!\'', 'Hello, World!', 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('double quote (\") string', () => {
+      expect(scanner.scanTokens('\"Hello, World!\"')).toEqual([
+        new Token(TokenType.STRING, '\"Hello, World!\"', 'Hello, World!', 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('double quote inside single quote string', () => {
+      expect(scanner.scanTokens('\'Fire the \"laser\"\'')).toEqual([
+        new Token(TokenType.STRING, '\'Fire the \"laser\"\'', 'Fire the \"laser\"', 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('single quote inside double quote string', () => {
+      expect(scanner.scanTokens('\"Fire the \'laser\'\"')).toEqual([
+        new Token(TokenType.STRING, '\"Fire the \'laser\'\"', 'Fire the \'laser\'', 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('multline string', () => {
+      const source = `
+        "multiline
+        strings
+        are
+        really
+        fun"
+      `.trim();
+
+      expect(scanner.scanTokens(source)).toEqual([
+        new Token(TokenType.STRING, source, source.slice(1, source.length - 1), 5),
+        new Token(TokenType.EOF, '', undefined, 5)
+      ]);
+    });
+
+    it('should reject unterminated strings', () => {
+      mockLoxError.error.shouldBeCalledWith(1, 'Unterminated string: \"you\'re hired!')
+        .when(() => scanner.scanTokens('\"you\'re hired!'));
     });
   });
 

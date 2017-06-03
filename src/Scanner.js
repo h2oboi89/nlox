@@ -40,6 +40,27 @@ class Scanner {
     }
   }
 
+  _string(closingQuote) {
+    while(this._peek() != closingQuote && !this._isAtEnd()) {
+      if(this._peek() === '\n') {
+        this._line++;
+      }
+      this._advance();
+    }
+
+    if(this._isAtEnd()) {
+      LoxError.error(this._line, `Unterminated string: ${this._source.slice(this._start, this._current)}`);
+      return;
+    }
+
+    // capture closing quote
+    this._advance();
+
+    const stringLiteral = this._source.slice(this._start + 1, this._current - 1);
+
+    this._addToken(TokenType.STRING, stringLiteral);
+  }
+
   _scanToken() {
     const c = this._advance();
 
@@ -103,7 +124,13 @@ class Scanner {
       case '\t':
         break;
       case '\n':
-      this._line++;
+        this._line++;
+        break;
+      case '\'':
+        this._string('\'');
+        break;
+      case '"':
+        this._string('"');
         break;
       default:
         LoxError.error(this._line, `Unexpected character: '${c}'`);
