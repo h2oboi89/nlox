@@ -11,13 +11,14 @@ const options = require('./options');
 const LoxError = require('./LoxError');
 const Scanner = require('./Scanner');
 
+const scanner = new Scanner();
+
 function run(source) {
   if(LoxError.hadError) {
     process.exit(65);
   }
   else {
-    const scanner = new Scanner(source);
-    const tokens = scanner.scanTokens();
+    const tokens = scanner.scanTokens(source);
 
     for(let token of tokens) {
       console.log(token.toString());

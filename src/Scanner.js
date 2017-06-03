@@ -5,15 +5,6 @@ const TokenType = require('./TokenType');
 const LoxError = require('./LoxError');
 
 class Scanner {
-  constructor(source) {
-    // TODO: move to scannTokens?
-    this._source = source;
-    this._tokens = [];
-    this._start = 0;
-    this._current = 0;
-    this._line = 1;
-  }
-
   _isAtEnd() {
     return this._current >= this._source.length;
   }
@@ -41,7 +32,7 @@ class Scanner {
   }
 
   _peek() {
-    if(this._current >= this._source.length()) {
+    if(this._current >= this._source.length) {
       return '\0';
     }
     else {
@@ -87,7 +78,7 @@ class Scanner {
         this._addToken(this._match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
         break;
       case '=':
-        this._addToken(this._match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL_EQUAL);
+        this._addToken(this._match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
         break;
       case '<':
         this._addToken(this._match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
@@ -119,13 +110,20 @@ class Scanner {
     }
   }
 
-  scanTokens() {
+  scanTokens(source) {
+    this._source = source;
+    this._tokens = [];
+    this._start = 0;
+    this._current = 0;
+    this._line = 1;
+
     while(!this._isAtEnd()) {
       this._start = this._current;
       this._scanToken();
     }
 
-    this._tokens.push(new Token(TokenType.EOL, '', undefined, this._line));
+    this._tokens.push(new Token(TokenType.EOF, '', undefined, this._line));
+    
     return this._tokens;
   }
 }
