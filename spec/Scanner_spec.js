@@ -403,5 +403,92 @@ describe('Scanner', () => {
     });
   });
 
-  // TODO: reject invalid input
+  describe('should scan keywords and identifiers', () => {
+    it('keywords', () => {
+      expect(scanner.scanTokens('and class else false fun if nil or')).toEqual([
+        new Token(TokenType.AND, 'and', undefined, 1),
+        new Token(TokenType.CLASS, 'class', undefined, 1),
+        new Token(TokenType.ELSE, 'else', undefined, 1),
+        new Token(TokenType.FALSE, 'false', undefined, 1),
+        new Token(TokenType.FUN, 'fun', undefined, 1),
+        new Token(TokenType.IF, 'if', undefined, 1),
+        new Token(TokenType.NIL, 'nil', undefined, 1),
+        new Token(TokenType.OR, 'or', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('print return super this true var while')).toEqual([
+        new Token(TokenType.PRINT, 'print', undefined, 1),
+        new Token(TokenType.RETURN, 'return', undefined, 1),
+        new Token(TokenType.SUPER, 'super', undefined, 1),
+        new Token(TokenType.THIS, 'this', undefined, 1),
+        new Token(TokenType.TRUE, 'true', undefined, 1),
+        new Token(TokenType.VAR, 'var', undefined, 1),
+        new Token(TokenType.WHILE, 'while', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('AND CLASS ELSE FALSE FUN IF NIL OR')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'AND', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'CLASS', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'ELSE', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'FALSE', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'FUN', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'IF', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'NIL', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'OR', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('PRINT RETURN SUPER THIS TRUE VAR WHILE')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'PRINT', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'RETURN', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'SUPER', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'THIS', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'TRUE', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'VAR', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'WHILE', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('identifiers', () => {
+      expect(scanner.scanTokens('abcdefghijklmnopqrstuvwxyz')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'abcdefghijklmnopqrstuvwxyz', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('ABCDEFGHIJKLMNOPQRSTUVWXYZ')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('snake_case')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'snake_case', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('CamelCase')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'CamelCase', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+
+      expect(scanner.scanTokens('a1 _1 _a _abc _123 a1b')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'a1', undefined, 1),
+        new Token(TokenType.IDENTIFIER, '_1', undefined, 1),
+        new Token(TokenType.IDENTIFIER, '_a', undefined, 1),
+        new Token(TokenType.IDENTIFIER, '_abc', undefined, 1),
+        new Token(TokenType.IDENTIFIER, '_123', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'a1b', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+  });
+
+  describe('should reject invalid characters', () => {
+    it('simple', () => {
+      mockLoxError.error.shouldBeCalledWith(1, 'Unexpected character: \'%\'')
+        .when(() => scanner.scanTokens('%'));
+    });
+  });
 });

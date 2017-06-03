@@ -4,6 +4,24 @@ const Token = require('./Token');
 const TokenType = require('./TokenType');
 const LoxError = require('./LoxError');
 
+const KEYWORDS = {
+  'and': TokenType.AND,
+  'class': TokenType.CLASS,
+  'else': TokenType.ELSE,
+  'false': TokenType.FALSE,
+  'fun': TokenType.FUN,
+  'if': TokenType.IF,
+  'nil': TokenType.NIL,
+  'or': TokenType.OR,
+  'print': TokenType.PRINT,
+  'return': TokenType.RETURN,
+  'super': TokenType.SUPER,
+  'this': TokenType.THIS,
+  'true': TokenType.TRUE,
+  'var': TokenType.VAR,
+  'while': TokenType.WHILE
+};
+
 class Scanner {
   _isAtEnd() {
     return this._current >= this._source.length;
@@ -32,7 +50,7 @@ class Scanner {
   }
 
   _peek(ahead) {
-    if (ahead === undefined) {
+    if(ahead === undefined) {
       ahead = 0;
     }
 
@@ -65,12 +83,22 @@ class Scanner {
     this._addToken(TokenType.STRING, stringLiteral);
   }
 
-  _isDigit(c) {
+  static _isDigit(c) {
     return c >= '0' && c <= '9';
   }
 
+  static _isAlpha(c) {
+    return c >= 'a' && c <= 'z' ||
+      c >= 'A' && c <= 'Z' ||
+      c === '_';
+  }
+
+  static isAlphaNumeric(c) {
+    return Scanner._isDigit(c) || Scanner._isAlpha(c);
+  }
+
   _consumeNumber() {
-    while(this._isDigit(this._peek())) {
+    while(Scanner._isDigit(this._peek())) {
       this._advance();
     }
   }
@@ -78,13 +106,25 @@ class Scanner {
   _number() {
     this._consumeNumber();
 
-    if(this._peek() === '.' && this._isDigit(this._peek(1))) {
+    if(this._peek() === '.' && Scanner._isDigit(this._peek(1))) {
       this._advance();
 
       this._consumeNumber();
     }
 
     this._addToken(TokenType.NUMBER, parseFloat(this._source.slice(this._start, this._current)));
+  }
+
+  _identifier() {
+    while(Scanner.isAlphaNumeric(this._peek())) {
+      this._advance();
+    }
+
+    const text = this._source.slice(this._start, this._current);
+
+    const type = KEYWORDS[text] || TokenType.IDENTIFIER;
+
+    this._addToken(type);
   }
 
   _scanToken() {
@@ -159,8 +199,11 @@ class Scanner {
         this._string('"');
         break;
       default:
-        if(this._isDigit(c)) {
+        if(Scanner._isDigit(c)) {
           this._number();
+        }
+        else if(Scanner._isAlpha(c)) {
+          this._identifier();
         }
         else {
           LoxError.error(this._line, `Unexpected character: '${c}'`);
