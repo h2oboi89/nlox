@@ -1,6 +1,13 @@
 'use strict';
 
+/*
+ * Represents a node in the AST.
+ *
+ */
 class LiteralExpression {
+  /*
+   * Creates a new LiteralExpression.
+   */
   constructor(value) {
     this._value = value;
   }
@@ -9,6 +16,10 @@ class LiteralExpression {
     return this._value;
   }
 
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
   accept(visitor) {
     return visitor.visitLiteralExpression(this);
   }

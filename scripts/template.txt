@@ -1,12 +1,23 @@
 'use strict';
 
+/*
+ * Represents a node in the AST.
+ *
+ */
 class <CLASSNAME> {
+  /*
+   * Creates a new <CLASSNAME>.
+   */
   constructor(<ARGUMENTS>) {
 <ASSIGNMENTS>
   }
 
 <FIELDS>
 
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
   accept(visitor) {
     return visitor.visit<CLASSNAME>(this);
   }

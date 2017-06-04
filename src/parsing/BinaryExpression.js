@@ -1,6 +1,13 @@
 'use strict';
 
+/*
+ * Represents a node in the AST.
+ *
+ */
 class BinaryExpression {
+  /*
+   * Creates a new BinaryExpression.
+   */
   constructor(left, operator, right) {
     this._left = left;
     this._operator = operator;
@@ -19,6 +26,10 @@ class BinaryExpression {
     return this._right;
   }
 
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
   accept(visitor) {
     return visitor.visitBinaryExpression(this);
   }

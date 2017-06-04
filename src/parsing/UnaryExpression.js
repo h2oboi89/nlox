@@ -1,6 +1,13 @@
 'use strict';
 
+/*
+ * Represents a node in the AST.
+ *
+ */
 class UnaryExpression {
+  /*
+   * Creates a new UnaryExpression.
+   */
   constructor(operator, right) {
     this._operator = operator;
     this._right = right;
@@ -14,6 +21,10 @@ class UnaryExpression {
     return this._right;
   }
 
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
   accept(visitor) {
     return visitor.visitUnaryExpression(this);
   }
