@@ -1,11 +1,11 @@
 'use strict';
 
-/*
+/**
  * Represents a node in the AST.
- *
+ * @memberof parsing
  */
 class UnaryExpression {
-  /*
+  /**
    * Creates a new UnaryExpression.
    */
   constructor(operator, right) {

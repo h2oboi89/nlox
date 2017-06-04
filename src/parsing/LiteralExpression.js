@@ -1,11 +1,11 @@
 'use strict';
 
-/*
+/**
  * Represents a node in the AST.
- *
+ * @memberof parsing
  */
 class LiteralExpression {
-  /*
+  /**
    * Creates a new LiteralExpression.
    */
   constructor(value) {

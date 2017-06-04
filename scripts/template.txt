@@ -1,11 +1,11 @@
 'use strict';
 
-/*
+/**
  * Represents a node in the AST.
- *
+ * @memberof parsing
  */
 class <CLASSNAME> {
-  /*
+  /**
    * Creates a new <CLASSNAME>.
    */
   constructor(<ARGUMENTS>) {

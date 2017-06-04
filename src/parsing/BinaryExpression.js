@@ -1,11 +1,11 @@
 'use strict';
 
-/*
+/**
  * Represents a node in the AST.
- *
+ * @memberof parsing
  */
 class BinaryExpression {
-  /*
+  /**
    * Creates a new BinaryExpression.
    */
   constructor(left, operator, right) {
