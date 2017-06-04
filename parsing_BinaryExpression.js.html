@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: TokenType.js</title>
+    <title>JSDoc: Source: parsing/BinaryExpression.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: TokenType.js</h1>
+    <h1 class="page-title">Source: parsing/BinaryExpression.js</h1>
 
     
 
@@ -28,34 +28,42 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const Enum = require('enum');
-
-/**
- * {@link Token} type enumerations.
- * @enum
+/*
+ * Represents a node in the AST.
+ *
  */
-const TokenType = new Enum([
-  // Single-character tokens.
-  'LEFT_PAREN', 'RIGHT_PAREN', 'LEFT_BRACE', 'RIGHT_BRACE',
-  'COMMA', 'DOT', 'MINUS', 'PLUS', 'SEMICOLON', 'SLASH', 'STAR',
+class BinaryExpression {
+  /*
+   * Creates a new BinaryExpression.
+   */
+  constructor(left, operator, right) {
+    this._left = left;
+    this._operator = operator;
+    this._right = right;
+  }
 
-  // One or two character tokens.
-  'BANG', 'BANG_EQUAL',
-  'EQUAL', 'EQUAL_EQUAL',
-  'GREATER', 'GREATER_EQUAL',
-  'LESS', 'LESS_EQUAL',
+  get left() {
+    return this._left;
+  }
 
-  // Literals.
-  'IDENTIFIER', 'STRING', 'NUMBER',
+  get operator() {
+    return this._operator;
+  }
 
-  // Keywords.
-  'AND', 'CLASS', 'ELSE', 'FALSE', 'FUN', 'FOR', 'IF', 'NIL', 'OR',
-  'PRINT', 'RETURN', 'SUPER', 'THIS', 'TRUE', 'VAR', 'WHILE',
+  get right() {
+    return this._right;
+  }
 
-  'EOF'
-], 'TokenType');
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
+  accept(visitor) {
+    return visitor.visitBinaryExpression(this);
+  }
+}
 
-module.exports = TokenType;
+module.exports = BinaryExpression;
 </code></pre>
         </article>
     </section>

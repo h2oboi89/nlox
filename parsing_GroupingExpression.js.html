@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: TokenType.js</title>
+    <title>JSDoc: Source: parsing/GroupingExpression.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: TokenType.js</h1>
+    <h1 class="page-title">Source: parsing/GroupingExpression.js</h1>
 
     
 
@@ -28,34 +28,32 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const Enum = require('enum');
-
-/**
- * {@link Token} type enumerations.
- * @enum
+/*
+ * Represents a node in the AST.
+ *
  */
-const TokenType = new Enum([
-  // Single-character tokens.
-  'LEFT_PAREN', 'RIGHT_PAREN', 'LEFT_BRACE', 'RIGHT_BRACE',
-  'COMMA', 'DOT', 'MINUS', 'PLUS', 'SEMICOLON', 'SLASH', 'STAR',
+class GroupingExpression {
+  /*
+   * Creates a new GroupingExpression.
+   */
+  constructor(expression) {
+    this._expression = expression;
+  }
 
-  // One or two character tokens.
-  'BANG', 'BANG_EQUAL',
-  'EQUAL', 'EQUAL_EQUAL',
-  'GREATER', 'GREATER_EQUAL',
-  'LESS', 'LESS_EQUAL',
+  get expression() {
+    return this._expression;
+  }
 
-  // Literals.
-  'IDENTIFIER', 'STRING', 'NUMBER',
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
+  accept(visitor) {
+    return visitor.visitGroupingExpression(this);
+  }
+}
 
-  // Keywords.
-  'AND', 'CLASS', 'ELSE', 'FALSE', 'FUN', 'FOR', 'IF', 'NIL', 'OR',
-  'PRINT', 'RETURN', 'SUPER', 'THIS', 'TRUE', 'VAR', 'WHILE',
-
-  'EOF'
-], 'TokenType');
-
-module.exports = TokenType;
+module.exports = GroupingExpression;
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: TokenType.js</title>
+    <title>JSDoc: Source: parsing/UnaryExpression.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: TokenType.js</h1>
+    <h1 class="page-title">Source: parsing/UnaryExpression.js</h1>
 
     
 
@@ -28,34 +28,37 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const Enum = require('enum');
-
-/**
- * {@link Token} type enumerations.
- * @enum
+/*
+ * Represents a node in the AST.
+ *
  */
-const TokenType = new Enum([
-  // Single-character tokens.
-  'LEFT_PAREN', 'RIGHT_PAREN', 'LEFT_BRACE', 'RIGHT_BRACE',
-  'COMMA', 'DOT', 'MINUS', 'PLUS', 'SEMICOLON', 'SLASH', 'STAR',
+class UnaryExpression {
+  /*
+   * Creates a new UnaryExpression.
+   */
+  constructor(operator, right) {
+    this._operator = operator;
+    this._right = right;
+  }
 
-  // One or two character tokens.
-  'BANG', 'BANG_EQUAL',
-  'EQUAL', 'EQUAL_EQUAL',
-  'GREATER', 'GREATER_EQUAL',
-  'LESS', 'LESS_EQUAL',
+  get operator() {
+    return this._operator;
+  }
 
-  // Literals.
-  'IDENTIFIER', 'STRING', 'NUMBER',
+  get right() {
+    return this._right;
+  }
 
-  // Keywords.
-  'AND', 'CLASS', 'ELSE', 'FALSE', 'FUN', 'FOR', 'IF', 'NIL', 'OR',
-  'PRINT', 'RETURN', 'SUPER', 'THIS', 'TRUE', 'VAR', 'WHILE',
+  /**
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
+   */
+  accept(visitor) {
+    return visitor.visitUnaryExpression(this);
+  }
+}
 
-  'EOF'
-], 'TokenType');
-
-module.exports = TokenType;
+module.exports = UnaryExpression;
 </code></pre>
         </article>
     </section>
