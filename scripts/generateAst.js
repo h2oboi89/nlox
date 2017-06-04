@@ -6,6 +6,7 @@ const fs = require('fs-extra');
 const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
 const templateFile = path.join(__dirname, 'template.txt');
+const os = require('os');
 
 function abbreviatedDirectoryName(directory) {
   return directory.replace(rootDirectory, '');
@@ -22,14 +23,14 @@ function defineType(type, fields) {
       classFile,
       contents.replace(/<CLASSNAME>/g, className)
       .replace(/<ARGUMENTS>/, fields.join(', '))
-      .replace(/<ASSIGNMENTS>/, fields.map((f) => `    this._${f} = ${f};`).join('\n'))
+      .replace(/<ASSIGNMENTS>/, fields.map((f) => `    this._${f} = ${f};`).join(`${os.EOL}`))
       .replace(/<FIELDS>/, fields.map((f) => {
         return [
           `  get ${f}() {`,
           `    return this._${f};`,
           `  }`
-        ].join('\n');
-      }).join('\n\n'))
+        ].join(`${os.EOL}`);
+      }).join(`${os.EOL}${os.EOL}`))
     ));
 }
 
