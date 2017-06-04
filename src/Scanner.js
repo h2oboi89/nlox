@@ -1,8 +1,8 @@
 'use strict';
 
+const LoxError = require('./LoxError');
 const Token = require('./Token');
 const TokenType = require('./TokenType');
-const LoxError = require('./LoxError');
 
 const KEYWORDS = {
   'and': TokenType.AND,

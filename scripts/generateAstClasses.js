@@ -1,16 +1,12 @@
 'use strict';
 
-const path = require('path');
 const fs = require('fs-extra');
+const os = require('os');
+const path = require('path');
 
 const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
 const templateFile = path.join(__dirname, 'template.txt');
-const os = require('os');
-
-function abbreviatedDirectoryName(directory) {
-  return directory.replace(rootDirectory, '');
-}
 
 function defineType(type, fields) {
   const className = `${type}Expression`;
@@ -43,7 +39,7 @@ function defineAst(definitions) {
 }
 
 function main() {
-  console.log(`Cleaning out ${abbreviatedDirectoryName(outputDirectory)}...`);
+  console.log(`Cleaning out ${outputDirectory.replace(rootDirectory, '')}...`);
 
   fs.emptyDir(outputDirectory)
     .then(() => {

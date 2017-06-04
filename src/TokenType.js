@@ -2,7 +2,6 @@
 
 const Enum = require('enum');
 
-
 /**
  * {@link Token} type enumerations.
  * @enum

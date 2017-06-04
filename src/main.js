@@ -6,8 +6,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const readline = require('readline');
 
-const options = require('./options');
 const LoxError = require('./LoxError');
+const options = require('./options');
 const Scanner = require('./Scanner');
 
 const scanner = new Scanner();
