@@ -5,10 +5,9 @@ const commandLineUsage = require('command-line-usage');
 const fs = require('fs-extra');
 const path = require('path');
 const readline = require('readline');
-const util = require('util');
 
-const options = require('./options');
 const LoxError = require('./LoxError');
+const options = require('./options');
 const Scanner = require('./Scanner');
 
 const scanner = new Scanner();
@@ -47,17 +46,14 @@ function runPrompt() {
 }
 
 function runFile(file) {
-  const fsStat = util.promisify(fs.stat);
-  const fsReadFile = util.promisify(fs.readFile);
-
-  fsStat(file)
+  fs.stat(file)
     .then((stats) => {
       // TODO: run all files in a directory?
       if(stats.isDirectory()) {
         throw new Error(`${file} is a directory, require a file`);
       }
     })
-    .then(() => fsReadFile(file, 'utf8'))
+    .then(() => fs.readFile(file, 'utf8'))
     .then((contents) => run(contents))
     .catch((error) => {
       console.error(error.message);

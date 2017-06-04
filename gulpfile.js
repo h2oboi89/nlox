@@ -11,9 +11,10 @@ const path = require('path');
 
 const source = ['./src/**/*.js', './index.js'];
 const sample = ['./sample/**/*.js'];
+const scripts = ['./scripts/**/*.js'];
 const tests = ['./spec/**/*.js'];
 const gulpfile = ['./gulpfile.js'];
-const all = [].concat(source).concat(sample).concat(tests).concat(gulpfile);
+const all = [...source, ...sample, ...scripts, ...tests, ...gulpfile];
 
 const lcovOutputFile = path.join(__dirname, 'coverage', 'lcov-report', 'index.html');
 

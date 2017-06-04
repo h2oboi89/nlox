@@ -22,13 +22,29 @@ class Token {
     this._line = line;
   }
 
+  get type() {
+    return this._type;
+  }
+
+  get lexeme() {
+    return this._lexeme;
+  }
+
+  get literal() {
+    return this._literal;
+  }
+
+  get line() {
+    return this._line;
+  }
+
   /**
    * Returns a string representing the token.
    *
    * @return {string}  A string representing the object.
    */
   toString() {
-    return `${this._type} ${this._lexeme} ${this._literal}`;
+    return `${this.type} ${this.lexeme} ${this.literal}`;
   }
 }
 
