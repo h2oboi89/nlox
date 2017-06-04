@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 
 const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
+const templateFile = path.join(__dirname, 'template.txt');
 
 function abbreviatedDirectoryName(directory) {
   return directory.replace(rootDirectory, '');
@@ -16,32 +17,20 @@ function defineType(type, fields) {
 
   console.log(` - ${className} : ${fields.join(', ')}`);
 
-  const fileContents = [
-    `'use strict';`,
-    ``,
-    `class ${className} {`,
-    `  constructor(${fields.join(', ')}) {`,
-    fields.map((f) => `    this._${f} = ${f};`).join('\n'),
-    `  }`,
-    ``,
-    fields.map((f) => {
-      return [
-        `  get ${f}() {`,
-        `    return this._${f};`,
-        `  }`
-      ].join('\n');
-    }).join('\n\n'),
-    ``,
-    `  accept(visitor) {`,
-    `    return visitor.visit${className}(this);`,
-    `  }`,
-    `}`,
-    ``,
-    `module.exports = ${className};`
-  ];
-
-  return fs.ensureFile(classFile)
-    .then(() => fs.appendFile(classFile, `${fileContents.join('\n')}\n`));
+  return fs.readFile(templateFile, 'utf8')
+    .then((contents) => fs.writeFile(
+      classFile,
+      contents.replace(/<CLASSNAME>/g, className)
+      .replace(/<ARGUMENTS>/, fields.join(', '))
+      .replace(/<ASSIGNMENTS>/, fields.map((f) => `    this._${f} = ${f};`).join('\n'))
+      .replace(/<FIELDS>/, fields.map((f) => {
+        return [
+          `  get ${f}() {`,
+          `    return this._${f};`,
+          `  }`
+        ].join('\n');
+      }).join('\n\n'))
+    ));
 }
 
 function defineAst(definitions) {

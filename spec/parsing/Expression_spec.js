@@ -11,7 +11,6 @@ describe('Expression', () => {
 
   class AstPrinter {
     print(expression) {
-      console.log(expression);
       return expression.accept(this);
     }
 
@@ -28,8 +27,6 @@ describe('Expression', () => {
     }
 
     visitLiteralExpression(expression) {
-      console.log(expression);
-      console.log(expression.value);
       return expression.value.toString();
     }
 

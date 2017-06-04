@@ -1,0 +1,15 @@
+'use strict';
+
+class <CLASSNAME> {
+  constructor(<ARGUMENTS>) {
+<ASSIGNMENTS>
+  }
+
+<FIELDS>
+
+  accept(visitor) {
+    return visitor.visit<CLASSNAME>(this);
+  }
+}
+
+module.exports = <CLASSNAME>;
