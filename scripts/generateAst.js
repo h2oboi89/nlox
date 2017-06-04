@@ -2,11 +2,9 @@
 
 const path = require('path');
 const fs = require('fs-extra');
-const klaw = require('klaw');
 
 const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
-const gitIgnoreFile = path.join(outputDirectory, '.gitignore');
 
 function abbreviatedDirectoryName(directory) {
   return directory.replace(rootDirectory, '');
@@ -16,7 +14,7 @@ function defineType(type, fields) {
   const className = `${type}Expression`;
   const classFile = path.join(outputDirectory, `${className}.js`);
 
-  console.log(` - ${type} : ${fields.join(', ')} -> ${abbreviatedDirectoryName(classFile)}`);
+  console.log(` - ${className} : ${fields.join(', ')}`);
 
   const fileContents = [
     `'use strict';`,
@@ -33,6 +31,10 @@ function defineType(type, fields) {
         `  }`
       ].join('\n');
     }).join('\n\n'),
+    ``,
+    `  accept(visitor) {`,
+    `    return visitor.visit${className}(this);`,
+    `  }`,
     `}`,
     ``,
     `module.exports = ${className};`
@@ -51,29 +53,9 @@ function defineAst(definitions) {
 }
 
 function main() {
-  new Promise((resolve) => {
-      const items = [];
+  console.log(`Cleaning out ${abbreviatedDirectoryName(outputDirectory)}...`);
 
-      klaw(outputDirectory)
-        .on('readable', function() {
-          let item;
-
-          while((item = this.read())) {
-            if(item.path === outputDirectory || item.path === gitIgnoreFile) {
-              continue;
-            }
-            items.push(item.path);
-          }
-        })
-        .on('end', () => {
-          resolve(items);
-        });
-    })
-    .then((paths) => {
-      console.log(`Cleaning out ${abbreviatedDirectoryName(outputDirectory)}...`);
-
-      return Promise.all(paths.map((p) => fs.remove(p)));
-    })
+  fs.emptyDir(outputDirectory)
     .then(() => {
       console.log('Generating AST classes...');
 

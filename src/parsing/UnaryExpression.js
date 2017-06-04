@@ -13,6 +13,10 @@ class UnaryExpression {
   get right() {
     return this._right;
   }
+
+  accept(visitor) {
+    return visitor.visitUnaryExpression(this);
+  }
 }
 
 module.exports = UnaryExpression;

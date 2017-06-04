@@ -8,6 +8,10 @@ class GroupingExpression {
   get expression() {
     return this._expression;
   }
+
+  accept(visitor) {
+    return visitor.visitGroupingExpression(this);
+  }
 }
 
 module.exports = GroupingExpression;

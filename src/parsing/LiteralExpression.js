@@ -8,6 +8,10 @@ class LiteralExpression {
   get value() {
     return this._value;
   }
+
+  accept(visitor) {
+    return visitor.visitLiteralExpression(this);
+  }
 }
 
 module.exports = LiteralExpression;

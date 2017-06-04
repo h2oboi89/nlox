@@ -18,6 +18,10 @@ class BinaryExpression {
   get right() {
     return this._right;
   }
+
+  accept(visitor) {
+    return visitor.visitBinaryExpression(this);
+  }
 }
 
 module.exports = BinaryExpression;
