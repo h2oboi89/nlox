@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Scanner</title>
+    <title>JSDoc: Class: GroupingExpression</title>
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -13,28 +13,30 @@
 </head>
 <body>
 <div id="main">
-    <h1 class="page-title">Class: Scanner</h1>
+    <h1 class="page-title">Class: GroupingExpression</h1>
 <section>
 <header>
-        <h2>Scanner</h2>
-            <div class="class-description"><p>Converts Lox source code into a series of <a href="Token.html"><code>Token</code></a>s.</p></div>
+        <h2>GroupingExpression</h2>
+            <div class="class-description"><p>Represents a node in the AST.</p></div>
 </header>
 <article>
     <div class="container-overview">
     <h2>Constructor</h2>
-    <h4 class="name" id="Scanner"><span class="type-signature"></span>new Scanner<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="GroupingExpression"><span class="type-signature"></span>new GroupingExpression<span class="signature">()</span><span class="type-signature"></span></h4>
+<div class="description">
+    <p>Creates a new GroupingExpression.</p>
+</div>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Scanner.js.html">Scanner.js</a>, <a href="Scanner.js.html#line29">line 29</a>
+        <a href="parsing_GroupingExpression.js.html">parsing/GroupingExpression.js</a>, <a href="parsing_GroupingExpression.js.html#line7">line 7</a>
     </li></ul></dd>
 </dl>
     </div>
         <h3 class="subsection-title">Methods</h3>
-    <h4 class="name" id="scanTokens"><span class="type-signature"></span>scanTokens<span class="signature">(source)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="Token.html">Token</a>>}</span></h4>
+    <h4 class="name" id="accept"><span class="type-signature"></span>accept<span class="signature">(visitor)</span><span class="type-signature"></span></h4>
 <div class="description">
-    <p>Scans source and converts it into <a href="Token.html"><code>Token</code></a>s.
-Will report errors using <a href="LoxError.html"><code>LoxError</code></a>.</p>
+    <p>Accepts a visitor.</p>
 </div>
     <h5>Parameters:</h5>
 <table class="params">
@@ -47,31 +49,19 @@ Will report errors using <a href="LoxError.html"><code>LoxError</code></a>.</p>
     </thead>
     <tbody>
         <tr>
-                <td class="name"><code>source</code></td>
+                <td class="name"><code>visitor</code></td>
             <td class="type">
-<span class="param-type">string</span>
+<span class="param-type">object</span>
             </td>
-            <td class="description last"><p>Lox source code.</p></td>
+            <td class="description last"><p>entity that is traversing the AST</p></td>
         </tr>
     </tbody>
 </table>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Scanner.js.html">Scanner.js</a>, <a href="Scanner.js.html#line231">line 231</a>
+        <a href="parsing_GroupingExpression.js.html">parsing/GroupingExpression.js</a>, <a href="parsing_GroupingExpression.js.html#line23">line 23</a>
     </li></ul></dd>
-</dl>
-<h5>Returns:</h5>
-<div class="param-desc">
-    <p>Scanned source code.</p>
-</div>
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-<span class="param-type">Array.&lt;<a href="Token.html">Token</a>></span>
-    </dd>
 </dl>
 </article>
 </section>
