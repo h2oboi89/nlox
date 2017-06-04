@@ -8,7 +8,7 @@
     "docClone": "jsdocgen clone",
     "docGenerate": "jsdocgen generate",
     "docPublish": "jsdocgen publish",
-    "install": "node ./scripts/generateAst.js"
+    "install": "node ./scripts/generateAstClasses.js"
   },
   "repository": {
     "type": "git",
