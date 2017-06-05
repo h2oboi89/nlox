@@ -76,7 +76,7 @@ describe('Parser', () => {
       expect(astPrinter.print(parser.parse(tokens))).toEqual('null');
     });
 
-    it('( true )', () => {
+    it('( EXPRESSION )', () => {
       const tokens = [
         new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
         new Token(TokenType.TRUE, 'true', undefined, 1),
