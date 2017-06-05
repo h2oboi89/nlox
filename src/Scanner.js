@@ -226,7 +226,7 @@ class Scanner {
    * Will report errors using {@link LoxError}.
    *
    * @param  {string} source Lox source code.
-   * @return {Token[]} Scanned source code.
+   * @return {Token[]} Tokens representing scanned source code.
    */
   scanTokens(source) {
     this._source = source;

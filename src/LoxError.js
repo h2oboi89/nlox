@@ -27,14 +27,6 @@ class LoxError {
     _hadError = false;
   }
 
-  /**
-   * Reports an issue using stderr.
-   *
-   * @static
-   * @param  {number} line    Line the issue occurred on.
-   * @param  {string} where   Location of the error.
-   * @param  {string} message Issue message.
-   */
   static _report(line, where, message) {
     console.error(`[line ${line}] Error ${where}: ${message}`);
     _hadError = true;

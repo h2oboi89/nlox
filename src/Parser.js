@@ -14,6 +14,9 @@ class ParseError extends Error {
   }
 }
 
+/**
+ * Converts scanned {@link Token}s into an executable AST.
+ */
 class Parser {
   _previous() {
     return this._tokens[this._current - 1];
@@ -182,6 +185,13 @@ class Parser {
     throw this._error(this._peek(), 'Expect expression');
   }
 
+  /**
+   * Parses {@link Token}s into an AST.
+   * Will report errors using {@link LoxError}.
+   *
+   * @param  {Token[]} tokens Scanned tokens.
+   * @return {Expression} AST representing parsed source.
+   */
   parse(tokens) {
     this._tokens = tokens;
     this._current = 0;
