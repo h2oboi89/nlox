@@ -13,7 +13,7 @@ describe('Scanner', () => {
 
   const Scanner = proxyquire('../src/Scanner', {
     './LoxError': mockLoxError
-  });
+  }, 'LoxError');
 
   const scanner = new Scanner();
 
