@@ -18,7 +18,7 @@ class AstPrinter {
   }
 
   visitLiteralExpression(expression) {
-    return expression.value.toString();
+    return `${expression.value}`;
   }
 
   visitUnaryExpression(expression) {

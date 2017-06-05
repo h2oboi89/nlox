@@ -30,10 +30,10 @@ describe('Expression', () => {
     expect(astPrinter.print(expression)).toEqual('( group a )');
   });
 
-  it('LiteralExpression ( 1 )', () => {
-    const expression = new LiteralExpression(1);
+  it('LiteralExpression ( null )', () => {
+    const expression = new LiteralExpression(null);
 
-    expect(astPrinter.print(expression)).toEqual('1');
+    expect(astPrinter.print(expression)).toEqual('null');
   });
 
   it('UnaryExpression ( ! true )', () => {
