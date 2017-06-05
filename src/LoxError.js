@@ -1,5 +1,7 @@
 'use strict';
 
+const TokenType = require('./TokenType');
+
 let _hadError = false;
 
 /**
@@ -25,28 +27,36 @@ class LoxError {
     _hadError = false;
   }
 
-  /**
-   * Reports an issue using stderr.
-   *
-   * @static
-   * @param  {number} line    Line the issue occurred on.
-   * @param  {string} where   ???
-   * @param  {string} message Issue message.
-   */
-  static report(line, where, message) {
+  static _report(line, where, message) {
     console.error(`[line ${line}] Error ${where}: ${message}`);
     _hadError = true;
   }
 
   /**
-   * Reports an error.
+   * Error reporting method for the {@link Scanner}.
    *
    * @static
    * @param  {number} line    Line the error occurred on.
    * @param  {string} message Error message.
    */
-  static error(line, message) {
-    this.report(line, '', message);
+  static scanError(line, message) {
+    this._report(line, '', message);
+  }
+
+  /**
+   * Error reporting method for the {@link Parser}.
+   *
+   * @static
+   * @param  {Token}  token   Token the error occurred on.
+   * @param  {string} message Error message.
+   */
+  static parseError(token, message) {
+    if(token.type == TokenType.EOF) {
+      this._report(token.line, "at end", message);
+    }
+    else {
+      this._report(token.line, "at '" + token.lexeme + "'", message);
+    }
   }
 }
 

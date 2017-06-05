@@ -1,39 +1,14 @@
 'use strict';
 
 describe('Expression', () => {
+  const AstPrinter = require('../../src/utility/AstPrinter');
+  const Token = require('../../src/Token');
+  const TokenType = require('../../src/TokenType');
+
   const BinaryExpression = require('../../src/parsing/BinaryExpression');
   const GroupingExpression = require('../../src/parsing/GroupingExpression');
   const LiteralExpression = require('../../src/parsing/LiteralExpression');
   const UnaryExpression = require('../../src/parsing/UnaryExpression');
-
-  const Token = require('../../src/Token');
-  const TokenType = require('../../src/TokenType');
-
-  class AstPrinter {
-    print(expression) {
-      return expression.accept(this);
-    }
-
-    _paranthesize(name, ...expressions) {
-      return `( ${name} ${expressions.map((e) => e.accept(this)).join(' ')} )`;
-    }
-
-    visitBinaryExpression(expression) {
-      return this._paranthesize(expression.operator.lexeme, expression.left, expression.right);
-    }
-
-    visitGroupingExpression(expression) {
-      return this._paranthesize('group', expression.expression);
-    }
-
-    visitLiteralExpression(expression) {
-      return expression.value.toString();
-    }
-
-    visitUnaryExpression(expression) {
-      return this._paranthesize(expression.operator.lexeme, expression.right);
-    }
-  }
 
   const astPrinter = new AstPrinter();
 
@@ -55,16 +30,16 @@ describe('Expression', () => {
     expect(astPrinter.print(expression)).toEqual('( group a )');
   });
 
-  it('LiteralExpression ( 1 )', () => {
-    const expression = new LiteralExpression(1);
+  it('LiteralExpression ( null )', () => {
+    const expression = new LiteralExpression(null);
 
-    expect(astPrinter.print(expression)).toEqual('1');
+    expect(astPrinter.print(expression)).toEqual('null');
   });
 
   it('UnaryExpression ( ! true )', () => {
     const expression = new UnaryExpression(
       new Token(TokenType.BANG, '!'),
-      new LiteralExpression('true')
+      new LiteralExpression(true)
     );
 
     expect(astPrinter.print(expression)).toEqual('( ! true )');

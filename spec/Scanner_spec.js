@@ -8,12 +8,12 @@ describe('Scanner', () => {
   const TokenType = require('../src/TokenType');
 
   const mockLoxError = mach.mockObject({
-    error: () => {}
+    scanError: () => {}
   });
 
   const Scanner = proxyquire('../src/Scanner', {
     './LoxError': mockLoxError
-  });
+  }, 'LoxError');
 
   const scanner = new Scanner();
 
@@ -335,7 +335,7 @@ describe('Scanner', () => {
     });
 
     it('should reject unterminated strings', () => {
-      mockLoxError.error.shouldBeCalledWith(1, 'Unterminated string: \"you\'re hired!')
+      mockLoxError.scanError.shouldBeCalledWith(1, 'Unterminated string: \"you\'re hired!')
         .when(() => scanner.scanTokens('\"you\'re hired!'));
     });
   });
@@ -488,7 +488,7 @@ describe('Scanner', () => {
 
   describe('should reject invalid characters', () => {
     it('simple', () => {
-      mockLoxError.error.shouldBeCalledWith(1, 'Unexpected character: \'%\'')
+      mockLoxError.scanError.shouldBeCalledWith(1, 'Unexpected character: \'%\'')
         .when(() => scanner.scanTokens('%'));
     });
   });
