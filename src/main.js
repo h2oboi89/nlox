@@ -6,10 +6,14 @@ const fs = require('fs-extra');
 const path = require('path');
 const readline = require('readline');
 
+const AstPrinter = require('./utility/AstPrinter');
 const LoxError = require('./LoxError');
 const options = require('./options');
+const Parser = require('./Parser');
 const Scanner = require('./Scanner');
 
+const astPrinter = new AstPrinter();
+const parser = new Parser();
 const scanner = new Scanner();
 
 function run(source) {
@@ -19,9 +23,13 @@ function run(source) {
   else {
     const tokens = scanner.scanTokens(source);
 
-    for(let token of tokens) {
-      console.log(token.toString());
+    const expression = parser.parse(tokens);
+
+    if (LoxError.hadError) {
+      return;
     }
+
+    console.log(astPrinter.print(expression));
   }
 }
 
