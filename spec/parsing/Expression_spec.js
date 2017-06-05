@@ -64,7 +64,7 @@ describe('Expression', () => {
   it('UnaryExpression ( ! true )', () => {
     const expression = new UnaryExpression(
       new Token(TokenType.BANG, '!'),
-      new LiteralExpression('true')
+      new LiteralExpression(true)
     );
 
     expect(astPrinter.print(expression)).toEqual('( ! true )');
