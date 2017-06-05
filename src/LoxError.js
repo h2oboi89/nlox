@@ -52,10 +52,10 @@ class LoxError {
    */
   static parseError(token, message) {
     if(token.type == TokenType.EOF) {
-      this._report(token.line, " at end", message);
+      this._report(token.line, "at end", message);
     }
     else {
-      this._report(token.line, " at '" + token.lexeme + "'", message);
+      this._report(token.line, "at '" + token.lexeme + "'", message);
     }
   }
 }
