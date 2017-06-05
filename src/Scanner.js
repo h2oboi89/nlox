@@ -86,7 +86,7 @@ class Scanner {
     }
 
     if(this._isAtEnd()) {
-      LoxError.error(this._line, `Unterminated string: ${this._source.slice(this._start, this._current)}`);
+      LoxError.scanError(this._line, `Unterminated string: ${this._source.slice(this._start, this._current)}`);
       return;
     }
 
@@ -214,7 +214,7 @@ class Scanner {
           this._identifier();
         }
         else {
-          LoxError.error(this._line, `Unexpected character: '${c}'`);
+          LoxError.scanError(this._line, `Unexpected character: '${c}'`);
         }
         break;
     }

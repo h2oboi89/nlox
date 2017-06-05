@@ -22,20 +22,11 @@ describe('LoxError', () => {
     global.console.error = globalConsoleError;
   });
 
-  it('report should print to console.error', () => {
-    expect(LoxError.hadError).toEqual(false);
-
-    global.console.error.shouldBeCalledWith('[line 1234] Error here: oh noez!')
-      .when(() => LoxError.report(1234, 'here', 'oh noez!'));
-
-    expect(LoxError.hadError).toEqual(true);
-  });
-
-  it('error should serve as a utility wrapper for report', () => {
+  it('scanError should report Scanner errors', () => {
     expect(LoxError.hadError).toEqual(false);
 
     global.console.error.shouldBeCalledWith('[line 4321] Error : DOOM!')
-      .when(() => LoxError.error(4321, 'DOOM!'));
+      .when(() => LoxError.scanError(4321, 'DOOM!'));
 
     expect(LoxError.hadError).toEqual(true);
   });
