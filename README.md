@@ -4,6 +4,14 @@ Lox interpreter written in Node JS.
 
 Based on http://craftinginterpreters.com/
 
+## Running
+
+### File
+`node index.js <FILE>`
+
+### REPL
+`node index.js`
+
 ## Setup
 - Run `npm install` to install all dependencies
 
