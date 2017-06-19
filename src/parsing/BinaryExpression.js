@@ -7,6 +7,10 @@
 class BinaryExpression {
   /**
    * Creates a new BinaryExpression.
+   *
+   * @param {Expression} left Left expression
+   * @param {Token} operator Binary operator (arithmetic, comparison, equality)
+   * @param {Expression} right Right expression
    */
   constructor(left, operator, right) {
     this._left = left;

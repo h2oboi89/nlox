@@ -9,11 +9,11 @@ describe('Scanner', () => {
 
   const mockLoxError = mach.mockObject({
     scanError: () => {}
-  });
+  }, 'LoxError');
 
   const Scanner = proxyquire('../src/Scanner', {
     './LoxError': mockLoxError
-  }, 'LoxError');
+  });
 
   const scanner = new Scanner();
 

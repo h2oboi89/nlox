@@ -6,19 +6,22 @@ const fs = require('fs-extra');
 const path = require('path');
 const readline = require('readline');
 
-const AstPrinter = require('./utility/AstPrinter');
 const LoxError = require('./LoxError');
 const options = require('./options');
-const Parser = require('./Parser');
 const Scanner = require('./Scanner');
+const Parser = require('./Parser');
+const Interpreter = require('./Interpreter');
 
-const astPrinter = new AstPrinter();
-const parser = new Parser();
 const scanner = new Scanner();
+const parser = new Parser();
+const interpreter = new Interpreter();
 
 function run(source) {
   if(LoxError.hadError) {
     process.exit(65);
+  }
+  else if (LoxError.hadRuntimeError) {
+    process.exit(70);
   }
   else {
     const tokens = scanner.scanTokens(source);
@@ -29,7 +32,7 @@ function run(source) {
       return;
     }
 
-    console.log(astPrinter.print(expression));
+    interpreter.interpret(expression);
   }
 }
 

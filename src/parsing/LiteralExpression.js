@@ -7,6 +7,8 @@
 class LiteralExpression {
   /**
    * Creates a new LiteralExpression.
+   *
+   * @param {object} value Literal value (true, false, nil, number, string)
    */
   constructor(value) {
     this._value = value;

@@ -3,6 +3,7 @@
 const TokenType = require('./TokenType');
 
 let _hadError = false;
+let _hadRuntimeError = false;
 
 /**
  * Error reporting mechanism for the interpreter.
@@ -19,12 +20,17 @@ class LoxError {
     return _hadError;
   }
 
+  static get hadRuntimeError() {
+    return _hadRuntimeError;
+  }
+
   /**
    * Resets the error state.
    * @static
    */
   static reset() {
     _hadError = false;
+    _hadRuntimeError = false;
   }
 
   static _report(line, where, message) {
@@ -57,6 +63,11 @@ class LoxError {
     else {
       this._report(token.line, "at '" + token.lexeme + "'", message);
     }
+  }
+
+  static runtimeError(error) {
+    console.log(`${error.message}\n[line ${error.token.line}]`);
+    _hadRuntimeError = true;
   }
 }
 

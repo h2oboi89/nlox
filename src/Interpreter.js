@@ -1,6 +1,18 @@
 'use strict';
 
+const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
+
+class RunTimeError extends Error {
+  constructor(token, message) {
+    super(message);
+    this._token = token;
+  }
+
+  get token() {
+    return this._token;
+  }
+}
 
 class Interpreter {
 
@@ -8,8 +20,8 @@ class Interpreter {
     return expression.accept(this);
   }
 
-  _isTruthy(expression) {
-    if(expression === undefined) {
+  static _isTruthy(expression) {
+    if(expression === null) {
       return false;
     }
     if(typeof expression === 'boolean') {
@@ -18,12 +30,30 @@ class Interpreter {
     return true;
   }
 
-  _isEqual(a, b) {
-    if(a === undefined) {
-      return b === undefined;
+  static _isEqual(a, b) {
+    if(a === null) {
+      return b === null;
     }
 
     return a === b;
+  }
+
+  static _CheckNumberOperand(operator, ...args) {
+    const message = args.length > 1 ? 'Operands must be a number.' : 'Operand must be a number';
+
+    for(let arg of args) {
+      if(typeof arg !== 'number') {
+        throw new RunTimeError(operator, message);
+      }
+    }
+  }
+
+  static _CheckStringOperand(operator, ...args) {
+    for(let arg of args) {
+      if(typeof arg !== 'string') {
+        throw new RunTimeError(operator, `Operands must be a string.`);
+      }
+    }
   }
 
   visitBinaryExpression(expression) {
@@ -33,27 +63,43 @@ class Interpreter {
     switch(expression.operator.type) {
       // Arithmetic
       case TokenType.MINUS:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left - right;
       case TokenType.PLUS:
-        return left + right;
+        if(typeof left === 'string' || typeof right === 'string') {
+          return left + right;
+        }
+        if (typeof left === 'number' && typeof right === 'number') {
+          return left + right;
+        }
+        else {
+          throw new RunTimeError(expression.operator, 'Operands must be two numbers or strings');
+        }
+        break;
       case TokenType.SLASH:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left / right;
       case TokenType.STAR:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left * right;
         // Comparison
       case TokenType.GREATER:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left > right;
       case TokenType.GREATER_EQUAL:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left >= right;
       case TokenType.LESS:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left < right;
       case TokenType.LESS_EQUAL:
+        Interpreter._CheckNumberOperand(expression.operator, left, right);
         return left <= right;
         // Equality
       case TokenType.BANG_EQUAL:
-        return !this._isEqual(left, right);
+        return !Interpreter._isEqual(left, right);
       case TokenType.EQUAL_EQUAL:
-        return this._isEqual(left, right);
+        return Interpreter._isEqual(left, right);
     }
   }
 
@@ -70,9 +116,34 @@ class Interpreter {
 
     switch(expression.operator.type) {
       case TokenType.MINUS:
+        Interpreter._CheckNumberOperand(expression.operator, right);
         return -1 * right;
       case TokenType.BANG:
-        return !this._isTruthy(right);
+        return !Interpreter._isTruthy(right);
+    }
+  }
+
+  static _stringify(value) {
+    if (value === null) {
+      return 'nil';
+    }
+
+    return `${value}`;
+  }
+
+  interpret(expression) {
+    try {
+      const value = this._evaluate(expression);
+
+      console.log(`${Interpreter._stringify(value)}`);
+    }
+    catch(error) {
+      if(error instanceof RunTimeError) {
+        LoxError.runtimeError(error);
+      }
+      else {
+        throw error;
+      }
     }
   }
 }

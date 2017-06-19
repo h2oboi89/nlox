@@ -7,6 +7,8 @@
 class GroupingExpression {
   /**
    * Creates a new GroupingExpression.
+   *
+   * @param {Expression} expression Nested expression.
    */
   constructor(expression) {
     this._expression = expression;
