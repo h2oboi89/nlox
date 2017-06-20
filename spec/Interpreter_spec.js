@@ -204,6 +204,10 @@ describe('Interpreter', () => {
             generateBinaryExpression(9, slashToken, 3),
             '3'
           );
+          shouldInterpretAstToValue(
+            generateBinaryExpression(1, slashToken, 0),
+            'Infinity'
+          );
         });
 
         it('should print an exception if told to divide a non-number', () => {
