@@ -158,7 +158,7 @@ describe('Parser', () => {
     });
   });
 
-  describe('should handle comarison expressions', () => {
+  describe('should handle comparison expressions', () => {
     it('6 > 9', () => {
       const tokens = [
         new Token(TokenType.NUMBER, '6', 6, 1),
