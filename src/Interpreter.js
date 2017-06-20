@@ -38,20 +38,12 @@ class Interpreter {
     return a === b;
   }
 
-  static _CheckNumberOperand(operator, ...args) {
-    const message = args.length > 1 ? 'Operands must be a number.' : 'Operand must be a number';
+  static _CheckNumberOperands(operator, ...args) {
+    const message = `${args.length > 1 ? 'Operands' : 'Operand'} must be a number.`;
 
     for(let arg of args) {
       if(typeof arg !== 'number') {
         throw new RunTimeError(operator, message);
-      }
-    }
-  }
-
-  static _CheckStringOperand(operator, ...args) {
-    for(let arg of args) {
-      if(typeof arg !== 'string') {
-        throw new RunTimeError(operator, `Operands must be a string.`);
       }
     }
   }
@@ -63,37 +55,34 @@ class Interpreter {
     switch(expression.operator.type) {
       // Arithmetic
       case TokenType.MINUS:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left - right;
       case TokenType.PLUS:
         if(typeof left === 'string' || typeof right === 'string') {
           return left + right;
         }
-        if (typeof left === 'number' && typeof right === 'number') {
+        if(typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        else {
-          throw new RunTimeError(expression.operator, 'Operands must be two numbers or strings');
-        }
-        break;
+        throw new RunTimeError(expression.operator, 'Operands must be two numbers or strings.');
       case TokenType.SLASH:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left / right;
       case TokenType.STAR:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left * right;
         // Comparison
       case TokenType.GREATER:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left > right;
       case TokenType.GREATER_EQUAL:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left >= right;
       case TokenType.LESS:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left < right;
       case TokenType.LESS_EQUAL:
-        Interpreter._CheckNumberOperand(expression.operator, left, right);
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left <= right;
         // Equality
       case TokenType.BANG_EQUAL:
@@ -116,7 +105,7 @@ class Interpreter {
 
     switch(expression.operator.type) {
       case TokenType.MINUS:
-        Interpreter._CheckNumberOperand(expression.operator, right);
+        Interpreter._CheckNumberOperands(expression.operator, right);
         return -1 * right;
       case TokenType.BANG:
         return !Interpreter._isTruthy(right);
@@ -124,7 +113,7 @@ class Interpreter {
   }
 
   static _stringify(value) {
-    if (value === null) {
+    if(value === null) {
       return 'nil';
     }
 
