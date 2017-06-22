@@ -7,8 +7,7 @@
 class LiteralExpression {
   /**
    * Creates a new LiteralExpression.
-   *
-   * @param {object} value Literal value (true, false, nil, number, string)
+   * TODO: document parameters
    */
   constructor(value) {
     this._value = value;

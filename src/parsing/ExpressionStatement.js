@@ -4,9 +4,9 @@
  * Represents a node in the AST.
  * @memberof parsing
  */
-class GroupingExpression {
+class ExpressionStatement {
   /**
-   * Creates a new GroupingExpression.
+   * Creates a new ExpressionStatement.
    * TODO: document parameters
    */
   constructor(expression) {
@@ -22,8 +22,8 @@ class GroupingExpression {
    * @param  {object} visitor entity that is traversing the AST
    */
   accept(visitor) {
-    return visitor.visitGroupingExpression(this);
+    return visitor.visitExpressionStatement(this);
   }
 }
 
-module.exports = GroupingExpression;
+module.exports = ExpressionStatement;

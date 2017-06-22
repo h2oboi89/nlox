@@ -8,8 +8,8 @@ const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
 const templateFile = path.join(__dirname, 'template.txt');
 
-function defineType(type, fields) {
-  const className = `${type}Expression`;
+function defineType(type, fields, suffix) {
+  const className = `${type}${suffix}`;
   const classFile = path.join(outputDirectory, `${className}.js`);
 
   console.log(` - ${className} : ${fields.join(', ')}`);
@@ -30,11 +30,11 @@ function defineType(type, fields) {
     ));
 }
 
-function defineAst(definitions) {
+function defineAst(definitions, suffix) {
   return Promise.all(definitions.map((definition) => {
     const parts = definition.split(':').map((p) => p.trim());
 
-    return defineType(parts[0], parts[1].split(',').map((f) => f.trim()));
+    return defineType(parts[0], parts[1].split(',').map((f) => f.trim()), suffix);
   }));
 }
 
@@ -43,14 +43,22 @@ function main() {
 
   fs.emptyDir(outputDirectory)
     .then(() => {
-      console.log('Generating AST classes...');
+      console.log('Generating AST Expressions...');
 
       return defineAst([
         'Binary   : left, operator, right',
         'Grouping : expression',
         'Literal  : value',
         'Unary    : operator, right'
-      ]);
+      ], 'Expression');
+    })
+    .then(() => {
+      console.log('Generating AST Statements...');
+
+      return defineAst([
+        'Expression : expression',
+        'Print      : expression'
+      ], 'Statement');
     })
     .catch((error) => {
       console.log(error);

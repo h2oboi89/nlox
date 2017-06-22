@@ -7,9 +7,7 @@
 class UnaryExpression {
   /**
    * Creates a new UnaryExpression.
-   *
-   * @param {Token} operator Unary operator (- or !)
-   * @param {Expression} right Unary operand
+   * TODO: document parameters
    */
   constructor(operator, right) {
     this._operator = operator;
