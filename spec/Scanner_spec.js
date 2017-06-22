@@ -486,6 +486,25 @@ describe('Scanner', () => {
     });
   });
 
+  describe('complicated input', () => {
+    it('(1 + 2) * (3 * 4)', () => {
+      expect(scanner.scanTokens('(1 + 2) * (3 + 4)')).toEqual([
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
+        new Token(TokenType.NUMBER, '1', 1, 1),
+        new Token(TokenType.PLUS, '+', undefined, 1),
+        new Token(TokenType.NUMBER, '2', 2, 1),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        new Token(TokenType.STAR, '*', undefined, 1),
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
+        new Token(TokenType.NUMBER, '3', 3, 1),
+        new Token(TokenType.PLUS, '+', undefined, 1),
+        new Token(TokenType.NUMBER, '4', 4, 1),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+  });
+
   describe('should reject invalid characters', () => {
     it('simple', () => {
       mockLoxError.scanError.shouldBeCalledWith(1, 'Unexpected character: \'%\'')

@@ -9,6 +9,7 @@ describe('Interpreter', () => {
   const LiteralExpression = require('../src/parsing/LiteralExpression');
   const UnaryExpression = require('../src/parsing/UnaryExpression');
   const BinaryExpression = require('../src/parsing/BinaryExpression');
+  const GroupingExpression = require('../src/parsing/GroupingExpression');
 
   const mockLoxError = mach.mockObject({
     runtimeError: () => {}
@@ -24,6 +25,14 @@ describe('Interpreter', () => {
   const plusToken = new Token(TokenType.PLUS, '+', undefined, 1);
   const slashToken = new Token(TokenType.SLASH, '/', undefined, 1);
   const starToken = new Token(TokenType.STAR, '*', undefined, 1);
+
+  const greaterToken = new Token(TokenType.GREATER, '>', undefined, 1);
+  const greaterEqualToken = new Token(TokenType.GREATER_EQUAL, '>=', undefined, 1);
+  const lessToken = new Token(TokenType.LESS, '<', undefined, 1);
+  const lessEqualToken = new Token(TokenType.LESS_EQUAL, '<', undefined, 1);
+
+  const equalToken = new Token(TokenType.EQUAL_EQUAL, '==', undefined, 1);
+  const notEqualToken = new Token(TokenType.BANG_EQUAL, '!=', undefined, 1);
 
   const negateToken = minusToken;
   const bangToken = new Token(TokenType.BANG, '!', undefined, 1);
@@ -236,6 +245,200 @@ describe('Interpreter', () => {
             'Operands must be a number.'
           );
         });
+      });
+    });
+
+    describe('Comparison', () => {
+      describe('greater', () => {
+        it('should interpret greater than', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, greaterToken, 1),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(1, greaterToken, 5),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, greaterToken, 3),
+            'false'
+          );
+        });
+
+        it('should print an exception if told to compare a non-number', () => {
+          shouldInterpretToError(
+            generateBinaryExpression(1, greaterToken, '1'),
+            'Operands must be a number.'
+          );
+        });
+      });
+
+      describe('greater or equal', () => {
+        it('should interpret greater or equal than', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, greaterEqualToken, 1),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(1, greaterEqualToken, 5),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, greaterEqualToken, 3),
+            'true'
+          );
+        });
+
+        it('should print an exception if told to compare a non-number', () => {
+          shouldInterpretToError(
+            generateBinaryExpression(1, greaterEqualToken, '1'),
+            'Operands must be a number.'
+          );
+        });
+      });
+
+      describe('less', () => {
+        it('should interpret less than', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, lessToken, 1),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(1, lessToken, 5),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, lessToken, 3),
+            'false'
+          );
+        });
+
+        it('should print an exception if told to compare a non-number', () => {
+          shouldInterpretToError(
+            generateBinaryExpression(1, lessToken, '1'),
+            'Operands must be a number.'
+          );
+        });
+      });
+
+      describe('less or equal', () => {
+        it('should interpret less or equal than', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, lessEqualToken, 1),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(1, lessEqualToken, 5),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, lessEqualToken, 3),
+            'true'
+          );
+        });
+
+        it('should print an exception if told to compare a non-number', () => {
+          shouldInterpretToError(
+            generateBinaryExpression(1, lessEqualToken, '1'),
+            'Operands must be a number.'
+          );
+        });
+      });
+    });
+
+    describe('equality', () => {
+      describe('equal', () => {
+        it('should interpret equal', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, equalToken, 1),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, equalToken, 3),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(null, equalToken, null),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(null, equalToken, 0),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression('foo', equalToken, 'foo'),
+            'true'
+          );
+        });
+      });
+
+      describe('not equal', () => {
+        it('should interpret not equal', () => {
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, notEqualToken, 1),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(3, notEqualToken, 3),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(null, notEqualToken, null),
+            'false'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression(null, notEqualToken, 0),
+            'true'
+          );
+
+          shouldInterpretAstToValue(
+            generateBinaryExpression('foo', notEqualToken, 'foo'),
+            'false'
+          );
+        });
+      });
+    });
+
+    describe('grouping expression', () => {
+      it('should interpret a grouped expression', () => {
+        shouldInterpretAstToValue(
+          new GroupingExpression(
+            generateBinaryExpression(1, plusToken, 2)
+          ),
+          '3'
+        );
+      });
+    });
+
+    describe('complicated input', () => {
+      it('(1 + 2) * (3 * 4) => 21', () => {
+        shouldInterpretAstToValue(
+          new BinaryExpression(
+            new GroupingExpression(
+              generateBinaryExpression(1, plusToken, 2)
+            ),
+            starToken,
+            new GroupingExpression(
+              generateBinaryExpression(3, plusToken, 4)
+            )
+          ),
+          '21'
+        );
       });
     });
   });

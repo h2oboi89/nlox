@@ -228,6 +228,28 @@ describe('Parser', () => {
     });
   });
 
+  describe('complicated input', () => {
+    it('(1 + 2) * (3 + 4)', () => {
+      const tokens = [
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
+        new Token(TokenType.NUMBER, '1', 1, 1),
+        new Token(TokenType.PLUS, '+', undefined, 1),
+        new Token(TokenType.NUMBER, '2', 2, 1),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        new Token(TokenType.STAR, '*', undefined, 1),
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
+        new Token(TokenType.NUMBER, '3', 3, 1),
+        new Token(TokenType.PLUS, '+', undefined, 1),
+        new Token(TokenType.NUMBER, '4', 4, 1),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        EOF_TOKEN
+      ];
+
+      expect(astPrinter.print(parser.parse(tokens)))
+        .toEqual('( * ( group ( + 1 2 ) ) ( group ( + 3 4 ) ) )');
+    });
+  });
+
   // TODO: invalid input
   // TODO: exception (rethrow in parse) <- how?
   // TODO: verify synchronize
