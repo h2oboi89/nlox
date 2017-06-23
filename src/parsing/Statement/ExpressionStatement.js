@@ -7,7 +7,6 @@
 class ExpressionStatement {
   /**
    * Creates a new ExpressionStatement.
-   * TODO: document parameters
    */
   constructor(expression) {
     this._expression = expression;

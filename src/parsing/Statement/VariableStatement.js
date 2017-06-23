@@ -7,7 +7,6 @@
 class VariableStatement {
   /**
    * Creates a new VariableStatement.
-   * TODO: document parameters
    */
   constructor(name, initializer) {
     this._name = name;

@@ -4,12 +4,17 @@
  * Represents a node in the AST.
  * @memberof parsing
  */
-class LiteralExpression {
+class AssignmentExpression {
   /**
-   * Creates a new LiteralExpression.
+   * Creates a new AssignmentExpression.
    */
-  constructor(value) {
+  constructor(name, value) {
+    this._name = name;
     this._value = value;
+  }
+
+  get name() {
+    return this._name;
   }
 
   get value() {
@@ -21,8 +26,8 @@ class LiteralExpression {
    * @param  {object} visitor entity that is traversing the AST
    */
   accept(visitor) {
-    return visitor.visitLiteralExpression(this);
+    return visitor.visitAssignmentExpression(this);
   }
 }
 
-module.exports = LiteralExpression;
+module.exports = AssignmentExpression;

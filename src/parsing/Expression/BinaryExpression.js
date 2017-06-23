@@ -7,7 +7,6 @@
 class BinaryExpression {
   /**
    * Creates a new BinaryExpression.
-   * TODO: document parameters
    */
   constructor(left, operator, right) {
     this._left = left;

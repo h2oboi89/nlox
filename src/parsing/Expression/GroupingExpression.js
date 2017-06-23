@@ -7,7 +7,6 @@
 class GroupingExpression {
   /**
    * Creates a new GroupingExpression.
-   * TODO: document parameters
    */
   constructor(expression) {
     this._expression = expression;

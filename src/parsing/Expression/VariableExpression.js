@@ -7,7 +7,6 @@
 class VariableExpression {
   /**
    * Creates a new VariableExpression.
-   * TODO: document parameters
    */
   constructor(name) {
     this._name = name;

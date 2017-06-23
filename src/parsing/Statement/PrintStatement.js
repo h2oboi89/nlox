@@ -7,7 +7,6 @@
 class PrintStatement {
   /**
    * Creates a new PrintStatement.
-   * TODO: document parameters
    */
   constructor(expression) {
     this._expression = expression;
