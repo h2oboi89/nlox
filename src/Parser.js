@@ -3,13 +3,15 @@
 const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
 
-const ExpressionStatement = require('./parsing/ExpressionStatement');
-const PrintStatement = require('./parsing/PrintStatement');
+const ExpressionStatement = require('./parsing/Statement/ExpressionStatement');
+const PrintStatement = require('./parsing/Statement/PrintStatement');
+const VariableStatement = require('./parsing/Statement/VariableStatement');
 
-const BinaryExpression = require('./parsing/BinaryExpression');
-const GroupingExpression = require('./parsing/GroupingExpression');
-const LiteralExpression = require('./parsing/LiteralExpression');
-const UnaryExpression = require('./parsing/UnaryExpression');
+const BinaryExpression = require('./parsing/Expression/BinaryExpression');
+const GroupingExpression = require('./parsing/Expression/GroupingExpression');
+const LiteralExpression = require('./parsing/Expression/LiteralExpression');
+const UnaryExpression = require('./parsing/Expression/UnaryExpression');
+const VariableExpression = require('./parsing/Expression/VariableExpression');
 
 class ParseError extends Error {
   constructor() {
@@ -100,6 +102,37 @@ class Parser {
     }
 
     throw this._error(this._peek(), message);
+  }
+
+  _declaration() {
+    try {
+      if(this._match(TokenType.VAR)) {
+        return this._variableDeclaration();
+      } else {
+        return this._statement();
+      }
+    } catch(error) {
+      if(error instanceof ParseError) {
+        this._synchronize();
+      }
+      else {
+        throw error;
+      }
+    }
+  }
+
+  _variableDeclaration() {
+    const name = this._consume(TokenType.IDENTIFIER, 'Expect variable name');
+
+    let initializer;
+
+    if(this._match(TokenType.EQUAL)) {
+      initializer = this._expression();
+    }
+
+    this._consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+
+    return new VariableStatement(name, initializer);
   }
 
   _statement() {
@@ -204,6 +237,10 @@ class Parser {
       return new LiteralExpression(this._previous().literal);
     }
 
+    if(this._match(TokenType.IDENTIFIER)) {
+      return new VariableExpression(this._previous());
+    }
+
     if(this._match(TokenType.LEFT_PAREN)) {
       const expression = this._expression();
       this._consume(TokenType.RIGHT_PAREN, `Expect ')' after expression.`);
@@ -228,7 +265,7 @@ class Parser {
       const statements = [];
 
       while(!this._isAtEnd()) {
-        statements.push(this._statement());
+        statements.push(this._declaration());
       }
 
       return statements;

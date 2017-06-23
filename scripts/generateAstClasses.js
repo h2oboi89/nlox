@@ -10,24 +10,27 @@ const templateFile = path.join(__dirname, 'template.txt');
 
 function defineType(type, fields, suffix) {
   const className = `${type}${suffix}`;
-  const classFile = path.join(outputDirectory, `${className}.js`);
+  const classFile = path.join(outputDirectory, suffix, `${className}.js`);
 
   console.log(` - ${className} : ${fields.join(', ')}`);
 
-  return fs.readFile(templateFile, 'utf8')
-    .then((contents) => fs.writeFile(
-      classFile,
-      contents.replace(/<CLASSNAME>/g, className)
-      .replace(/<ARGUMENTS>/, fields.join(', '))
-      .replace(/<ASSIGNMENTS>/, fields.map((f) => `    this._${f} = ${f};`).join(`${os.EOL}`))
-      .replace(/<FIELDS>/, fields.map((f) => {
-        return [
-          `  get ${f}() {`,
-          `    return this._${f};`,
-          `  }`
-        ].join(`${os.EOL}`);
-      }).join(`${os.EOL}${os.EOL}`))
-    ));
+  return fs.ensureFile(classFile)
+    .then(() => {
+      return fs.readFile(templateFile, 'utf8')
+        .then((contents) => fs.writeFile(
+          classFile,
+          contents.replace(/<CLASSNAME>/g, className)
+          .replace(/<ARGUMENTS>/, fields.join(', '))
+          .replace(/<ASSIGNMENTS>/, fields.map((f) => `    this._${f} = ${f};`).join(`${os.EOL}`))
+          .replace(/<FIELDS>/, fields.map((f) => {
+            return [
+              `  get ${f}() {`,
+              `    return this._${f};`,
+              `  }`
+            ].join(`${os.EOL}`);
+          }).join(`${os.EOL}${os.EOL}`))
+        ));
+    });
 }
 
 function defineAst(definitions, suffix) {
@@ -49,7 +52,8 @@ function main() {
         'Binary   : left, operator, right',
         'Grouping : expression',
         'Literal  : value',
-        'Unary    : operator, right'
+        'Unary    : operator, right',
+        'Variable : name'
       ], 'Expression');
     })
     .then(() => {
@@ -57,7 +61,8 @@ function main() {
 
       return defineAst([
         'Expression : expression',
-        'Print      : expression'
+        'Print      : expression',
+        'Variable   : name, initializer'
       ], 'Statement');
     })
     .catch((error) => {

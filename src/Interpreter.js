@@ -2,19 +2,14 @@
 
 const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
-
-class RunTimeError extends Error {
-  constructor(token, message) {
-    super(message);
-    this._token = token;
-  }
-
-  get token() {
-    return this._token;
-  }
-}
+const RuntimeError = require('./RuntimeError');
+const Environment = require('./Environment');
 
 class Interpreter {
+  constructor() {
+    this._environment = new Environment();
+  }
+
   _execute(statement) {
     statement.accept(this);
   }
@@ -46,7 +41,7 @@ class Interpreter {
 
     for(let arg of args) {
       if(typeof arg !== 'number') {
-        throw new RunTimeError(operator, message);
+        throw new RuntimeError(operator, message);
       }
     }
   }
@@ -55,9 +50,19 @@ class Interpreter {
     this._evaluate(statement.expression);
   }
 
-  visitPrintStatement(printStatement) {
-    const value = this._evaluate(printStatement.expression);
+  visitPrintStatement(statement) {
+    const value = this._evaluate(statement.expression);
     console.log(Interpreter._stringify(value));
+  }
+
+  visitVariableStatement(statement) {
+    let value;
+
+    if (statement.initializer) {
+      value = this._evaluate(statement.initializer);
+    }
+
+    this._environment.define(statement.name.lexeme, value);
   }
 
   visitBinaryExpression(expression) {
@@ -76,7 +81,7 @@ class Interpreter {
         if(typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        throw new RunTimeError(expression.operator, 'Operands must be two numbers or strings.');
+        throw new RuntimeError(expression.operator, 'Operands must be two numbers or strings.');
       case TokenType.SLASH:
         Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left / right;
@@ -124,6 +129,10 @@ class Interpreter {
     }
   }
 
+  visitVariableExpression(expression) {
+    return this._environment.get(expression.name);
+  }
+
   static _stringify(value) {
     if(value === null) {
       return 'nil';
@@ -139,7 +148,7 @@ class Interpreter {
       }
     }
     catch(error) {
-      if(error instanceof RunTimeError) {
+      if(error instanceof RuntimeError) {
         LoxError.runtimeError(error);
       }
       else {

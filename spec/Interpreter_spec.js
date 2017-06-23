@@ -7,12 +7,12 @@ describe('Interpreter', () => {
   const Token = require('../src/Token');
   const TokenType = require('../src/TokenType');
 
-  const PrintStatement = require('../src/parsing/PrintStatement');
+  const PrintStatement = require('../src/parsing/Statement/PrintStatement');
 
-  const LiteralExpression = require('../src/parsing/LiteralExpression');
-  const UnaryExpression = require('../src/parsing/UnaryExpression');
-  const BinaryExpression = require('../src/parsing/BinaryExpression');
-  const GroupingExpression = require('../src/parsing/GroupingExpression');
+  const LiteralExpression = require('../src/parsing/Expression/LiteralExpression');
+  const UnaryExpression = require('../src/parsing/Expression/UnaryExpression');
+  const BinaryExpression = require('../src/parsing/Expression/BinaryExpression');
+  const GroupingExpression = require('../src/parsing/Expression/GroupingExpression');
 
   const mockLoxError = mach.mockObject({
     runtimeError: () => {}
