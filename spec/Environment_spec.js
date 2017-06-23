@@ -9,31 +9,34 @@ describe('Environment', () => {
 
   const fooToken = new Token(null, 'foo');
   const barToken = new Token(null, 'bar');
+  const bazToken = new Token(null, 'baz');
 
-  it('undefined variables should throw an error', () => {
+  it('getting undefined variables should throw an error', () => {
     expect(() => environment.get(fooToken))
       .toThrowError(`Undefined variable 'foo'.`);
   });
 
-  it('should support defining and getting variables', () => {
-    environment.define('foo', 0);
-    environment.define('bar', 1);
+  it('assigning undefined variables should throw an error', () => {
+    expect(() => environment.assign(fooToken))
+      .toThrowError(`Undefined variable 'foo'.`);
+  });
+
+  it('should support variable operations (define, assign, get)', () => {
+    environment.define(fooToken, 0);
+    environment.define(barToken, 1);
 
     expect(environment.get(fooToken)).toEqual(0);
     expect(environment.get(barToken)).toEqual(1);
 
-    environment.define('foo', 10);
+    environment.assign(fooToken, 10);
 
     expect(environment.get(fooToken)).toEqual(10);
   });
 
-  it('should support redefining variables', () => {
-    environment.define('foo', 0);
+  it('redefining variables should throw an error', () => {
+    environment.define(bazToken, 0);
 
-    expect(environment.get(fooToken)).toEqual(0);
-
-    environment.define('foo', 'bar');
-
-    expect(environment.get(fooToken)).toEqual('bar');
+    expect(() => environment.define(bazToken, 1))
+      .toThrowError(`'baz' has already been defined.`);
   });
 });

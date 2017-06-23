@@ -62,7 +62,15 @@ class Interpreter {
       value = this._evaluate(statement.initializer);
     }
 
-    this._environment.define(statement.name.lexeme, value);
+    this._environment.define(statement.name, value);
+  }
+
+  visitAssignmentExpression(expression) {
+    const value = this._evaluate(expression.value);
+
+    this._environment.assign(expression.name, value);
+
+    return value;
   }
 
   visitBinaryExpression(expression) {

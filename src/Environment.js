@@ -7,15 +7,41 @@ class Environment {
     this._values = {};
   }
 
+  static _throwUndefinedError(name) {
+    throw new RuntimeError(name, `Undefined variable '${name.lexeme}'.`);
+  }
+
+  static _throwDefinedError(name) {
+    throw new RuntimeError(name, `'${name.lexeme}' has already been defined.`);
+  }
+
+  _variableExists(name) {
+    return this._values[name.lexeme] !== undefined;
+  }
+
   define(name, value) {
-    this._values[name] = value;
+    if(!this._variableExists(name)) {
+      this._values[name.lexeme] = value;
+    }
+    else {
+      Environment._throwDefinedError(name);
+    }
+  }
+
+  assign(name, value) {
+    if(this._variableExists(name)) {
+      this._values[name.lexeme] = value;
+    }
+    else {
+      Environment._throwUndefinedError(name);
+    }
   }
 
   get(name) {
-    if(this._values[name.lexeme] !== undefined) {
+    if(this._variableExists(name)) {
       return this._values[name.lexeme];
     } else {
-      throw new RuntimeError(name, `Undefined variable '${name.lexeme}'.`);
+      Environment._throwUndefinedError(name);
     }
   }
 }
