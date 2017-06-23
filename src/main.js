@@ -26,13 +26,13 @@ function run(source) {
   else {
     const tokens = scanner.scanTokens(source);
 
-    const expression = parser.parse(tokens);
+    const statements = parser.parse(tokens);
 
     if (LoxError.hadError) {
       return;
     }
 
-    interpreter.interpret(expression);
+    interpreter.interpret(statements);
   }
 }
 

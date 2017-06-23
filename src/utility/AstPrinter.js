@@ -10,14 +10,27 @@ class AstPrinter {
    * @param  {parsing.BinaryExpression|parsing.GroupingExpression|parsing.LiteralExpression|parsing.UnaryExpression} expression AST to print.
    * @return {string} String representing the AST.
    */
-  print(expression) {
-    return expression.accept(this);
+  print(statements) {
+    const output = [];
+
+    for(let statement of statements) {
+      output.push(statement.accept(this));
+    }
+
+    return output.filter((o) => o !== undefined).join('\n');
   }
 
-  _paranthesize(name, ...expressions) {
+  _parenthesize(name, ...expressions) {
     return `( ${name} ${expressions.map((e) => e.accept(this)).join(' ')} )`;
   }
 
+  visitExpressionStatement(statement) {
+    return this._parenthesize('statement', statement.expression);
+  }
+
+  visitPrintStatement(printStatement) {
+    return this._paranthesize('print', printStatement.expression);
+  }
 
   /**
    * Converts BinaryExpression to a string.
@@ -25,7 +38,7 @@ class AstPrinter {
    * @return {string} String representing the expression.
    */
   visitBinaryExpression(expression) {
-    return this._paranthesize(expression.operator.lexeme, expression.left, expression.right);
+    return this._parenthesize(expression.operator.lexeme, expression.left, expression.right);
   }
 
   /**
@@ -34,7 +47,7 @@ class AstPrinter {
    * @return {string} String representing the expression.
    */
   visitGroupingExpression(expression) {
-    return this._paranthesize('group', expression.expression);
+    return this._parenthesize('group', expression.expression);
   }
 
   /**
@@ -52,7 +65,7 @@ class AstPrinter {
    * @return {string} String representing the expression.
    */
   visitUnaryExpression(expression) {
-    return this._paranthesize(expression.operator.lexeme, expression.right);
+    return this._parenthesize(expression.operator.lexeme, expression.right);
   }
 }
 

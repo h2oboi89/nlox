@@ -3,6 +3,9 @@
 const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
 
+const ExpressionStatement = require('./parsing/ExpressionStatement');
+const PrintStatement = require('./parsing/PrintStatement');
+
 const BinaryExpression = require('./parsing/BinaryExpression');
 const GroupingExpression = require('./parsing/GroupingExpression');
 const LiteralExpression = require('./parsing/LiteralExpression');
@@ -97,6 +100,31 @@ class Parser {
     }
 
     throw this._error(this._peek(), message);
+  }
+
+  _statement() {
+    if(this._match(TokenType.PRINT)) {
+      return this._printStatement();
+    }
+    else {
+      return this._expressionStatement();
+    }
+  }
+
+  _printStatement() {
+    const value = this._expression();
+
+    this._consume(TokenType.SEMICOLON, "Expect ';' after value.");
+
+    return new PrintStatement(value);
+  }
+
+  _expressionStatement() {
+    const expression = this._expression();
+
+    this._consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+
+    return new ExpressionStatement(expression);
   }
 
   _expression() {
@@ -197,7 +225,13 @@ class Parser {
     this._current = 0;
 
     try {
-      return this._expression();
+      const statements = [];
+
+      while(!this._isAtEnd()) {
+        statements.push(this._statement());
+      }
+
+      return statements;
     }
     catch(error) {
       if(error instanceof ParseError) {

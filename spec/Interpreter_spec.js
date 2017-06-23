@@ -6,6 +6,9 @@ describe('Interpreter', () => {
 
   const Token = require('../src/Token');
   const TokenType = require('../src/TokenType');
+
+  const PrintStatement = require('../src/parsing/PrintStatement');
+
   const LiteralExpression = require('../src/parsing/LiteralExpression');
   const UnaryExpression = require('../src/parsing/UnaryExpression');
   const BinaryExpression = require('../src/parsing/BinaryExpression');
@@ -40,7 +43,7 @@ describe('Interpreter', () => {
   function shouldInterpretAstToValue(ast, expected) {
     global.console.log.shouldBeCalledWith(expected)
       .when(() => {
-        interpreter.interpret(ast);
+        interpreter.interpret([new PrintStatement(ast)]);
       });
   }
 
@@ -49,7 +52,7 @@ describe('Interpreter', () => {
 
     mockLoxError.runtimeError.shouldBeCalledWith(mach.same(error, (a, b) => a.message === b.message))
       .when(() => {
-        interpreter.interpret(ast);
+        interpreter.interpret([new PrintStatement(ast)]);
       });
   }
 

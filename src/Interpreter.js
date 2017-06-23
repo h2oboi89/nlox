@@ -15,6 +15,9 @@ class RunTimeError extends Error {
 }
 
 class Interpreter {
+  _execute(statement) {
+    statement.accept(this);
+  }
 
   _evaluate(expression) {
     return expression.accept(this);
@@ -46,6 +49,15 @@ class Interpreter {
         throw new RunTimeError(operator, message);
       }
     }
+  }
+
+  visitExpressionStatement(statement) {
+    this._evaluate(statement.expression);
+  }
+
+  visitPrintStatement(printStatement) {
+    const value = this._evaluate(printStatement.expression);
+    console.log(Interpreter._stringify(value));
   }
 
   visitBinaryExpression(expression) {
@@ -120,11 +132,11 @@ class Interpreter {
     return `${value}`;
   }
 
-  interpret(expression) {
+  interpret(statements) {
     try {
-      const value = this._evaluate(expression);
-
-      console.log(`${Interpreter._stringify(value)}`);
+      for(let statement of statements) {
+        this._execute(statement);
+      }
     }
     catch(error) {
       if(error instanceof RunTimeError) {

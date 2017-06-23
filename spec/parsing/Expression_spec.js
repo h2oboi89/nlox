@@ -19,7 +19,7 @@ describe('Expression', () => {
       new LiteralExpression(2)
     );
 
-    expect(astPrinter.print(expression)).toEqual('( + 1 2 )');
+    expect(astPrinter.print([expression])).toEqual('( + 1 2 )');
   });
 
   it('GroupingExpression ( group a )', () => {
@@ -27,13 +27,13 @@ describe('Expression', () => {
       new LiteralExpression('a')
     );
 
-    expect(astPrinter.print(expression)).toEqual('( group a )');
+    expect(astPrinter.print([expression])).toEqual('( group a )');
   });
 
   it('LiteralExpression ( null )', () => {
     const expression = new LiteralExpression(null);
 
-    expect(astPrinter.print(expression)).toEqual('null');
+    expect(astPrinter.print([expression])).toEqual('null');
   });
 
   it('UnaryExpression ( ! true )', () => {
@@ -42,7 +42,7 @@ describe('Expression', () => {
       new LiteralExpression(true)
     );
 
-    expect(astPrinter.print(expression)).toEqual('( ! true )');
+    expect(astPrinter.print([expression])).toEqual('( ! true )');
   });
 
   it('BinaryExpression ( 1 * (2 + 3) )', () => {
@@ -56,6 +56,6 @@ describe('Expression', () => {
       )
     );
 
-    expect(astPrinter.print(expression)).toEqual('( * 1 ( + 2 3 ) )');
+    expect(astPrinter.print([expression])).toEqual('( * 1 ( + 2 3 ) )');
   });
 });

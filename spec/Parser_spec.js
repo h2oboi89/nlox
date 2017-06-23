@@ -18,15 +18,13 @@ describe('Parser', () => {
 
   const astPrinter = new AstPrinter();
   const EOF_TOKEN = new Token(TokenType.EOF, '', undefined, 1);
+  const SEMICOLON_TOKEN = new Token(TokenType.SEMICOLON, ';', undefined, 1);
 
   const parser = new Parser();
 
-  describe('should reject empty input', () => {
+  describe('should accept empty input', () => {
     it('', () => {
-      mockLoxError.parseError.shouldBeCalledWith(EOF_TOKEN, 'Expect expression')
-        .when(() => {
-          parser.parse([EOF_TOKEN]);
-        });
+      expect(astPrinter.print(parser.parse([EOF_TOKEN]))).toEqual('');
     });
   });
 
@@ -34,46 +32,51 @@ describe('Parser', () => {
     it('NUMBER', () => {
       const tokens = [
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('9');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement 9 )');
     });
 
     it('STRING', () => {
       const tokens = [
         new Token(TokenType.STRING, '\'kthnxbai\'', 'kthnxbai', 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('kthnxbai');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement kthnxbai )');
     });
 
     it('false', () => {
       const tokens = [
         new Token(TokenType.FALSE, 'false', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('false');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement false )');
     });
 
     it('true', () => {
       const tokens = [
         new Token(TokenType.TRUE, 'true', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('true');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement true )');
     });
 
     it('nil', () => {
       const tokens = [
         new Token(TokenType.NIL, 'nil', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('null');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement null )');
     });
 
     it('( EXPRESSION )', () => {
@@ -81,10 +84,11 @@ describe('Parser', () => {
         new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
         new Token(TokenType.TRUE, 'true', undefined, 1),
         new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( group true )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( group true ) )');
     });
   });
 
@@ -93,20 +97,22 @@ describe('Parser', () => {
       const tokens = [
         new Token(TokenType.BANG, '!', undefined, 1),
         new Token(TokenType.TRUE, 'true', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( ! true )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( ! true ) )');
     });
 
     it('-3', () => {
       const tokens = [
         new Token(TokenType.MINUS, '-', undefined, 1),
         new Token(TokenType.NUMBER, '1', 3, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( - 3 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( - 3 ) )');
     });
   });
 
@@ -116,10 +122,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.STAR, '*', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( * 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( * 6 9 ) )');
     });
 
     it('6 / 9', () => {
@@ -127,10 +134,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.SLASH, '/', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( / 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( / 6 9 ) )');
     });
   });
 
@@ -140,10 +148,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.PLUS, '+', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( + 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( + 6 9 ) )');
     });
 
     it('6 - 9', () => {
@@ -151,10 +160,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.MINUS, '-', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( - 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( - 6 9 ) )');
     });
   });
 
@@ -164,10 +174,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.GREATER, '>', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( > 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( > 6 9 ) )');
     });
 
     it('6 >= 9', () => {
@@ -175,10 +186,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.GREATER_EQUAL, '>=', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( >= 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( >= 6 9 ) )');
     });
 
     it('6 < 9', () => {
@@ -186,10 +198,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.LESS, '<', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( < 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( < 6 9 ) )');
     });
 
     it('6 <= 9', () => {
@@ -197,10 +210,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.LESS_EQUAL, '<=', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( <= 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( <= 6 9 ) )');
     });
   });
 
@@ -210,10 +224,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.BANG_EQUAL, '!=', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( != 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( != 6 9 ) )');
     });
 
     it('6 == 9', () => {
@@ -221,10 +236,11 @@ describe('Parser', () => {
         new Token(TokenType.NUMBER, '6', 6, 1),
         new Token(TokenType.EQUAL_EQUAL, '==', undefined, 1),
         new Token(TokenType.NUMBER, '9', 9, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( == 6 9 )');
+      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( == 6 9 ) )');
     });
   });
 
@@ -242,14 +258,16 @@ describe('Parser', () => {
         new Token(TokenType.PLUS, '+', undefined, 1),
         new Token(TokenType.NUMBER, '4', 4, 1),
         new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
+        SEMICOLON_TOKEN,
         EOF_TOKEN
       ];
 
       expect(astPrinter.print(parser.parse(tokens)))
-        .toEqual('( * ( group ( + 1 2 ) ) ( group ( + 3 4 ) ) )');
+        .toEqual('( statement ( * ( group ( + 1 2 ) ) ( group ( + 3 4 ) ) ) )');
     });
   });
 
+  // TODO: multiline input
   // TODO: invalid input
   // TODO: exception (rethrow in parse) <- how?
   // TODO: verify synchronize
