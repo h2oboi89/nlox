@@ -8,7 +8,7 @@ const rootDirectory = path.join(__dirname, '..');
 const outputDirectory = path.join(rootDirectory, 'src', 'parsing');
 const templateFile = path.join(__dirname, 'template.txt');
 
-function defineType(type, fields, suffix) {
+function generateType(type, fields, suffix) {
   const className = `${type}${suffix}`;
   const classFile = path.join(outputDirectory, suffix, `${className}.js`);
 
@@ -33,11 +33,11 @@ function defineType(type, fields, suffix) {
     });
 }
 
-function defineAst(definitions, suffix) {
+function generateAst(definitions, suffix) {
   return Promise.all(definitions.map((definition) => {
     const parts = definition.split(':').map((p) => p.trim());
 
-    return defineType(parts[0], parts[1].split(',').map((f) => f.trim()), suffix);
+    return generateType(parts[0], parts[1].split(',').map((f) => f.trim()), suffix);
   }));
 }
 
@@ -48,18 +48,19 @@ function main() {
     .then(() => {
       console.log('Generating AST Expressions...');
 
-      return defineAst([
-        'Binary   : left, operator, right',
-        'Grouping : expression',
-        'Literal  : value',
-        'Unary    : operator, right',
-        'Variable : name'
+      return generateAst([
+        'Assignment : name, value',
+        'Binary     : left, operator, right',
+        'Grouping   : expression',
+        'Literal    : value',
+        'Unary      : operator, right',
+        'Variable   : name'
       ], 'Expression');
     })
     .then(() => {
       console.log('Generating AST Statements...');
 
-      return defineAst([
+      return generateAst([
         'Expression : expression',
         'Print      : expression',
         'Variable   : name, initializer'
