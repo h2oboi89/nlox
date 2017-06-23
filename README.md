@@ -3,8 +3,8 @@
 Lox interpreter written in Node JS.
 
 Based on Bob Nystrom's Lox book
- - website: http://craftinginterpreters.com/
- - github:  https://github.com/munificent/craftinginterpreters
+ - website: <a href="http://craftinginterpreters.com/">Crafting Interpreters</a>
+ - github:  <a href="https://github.com/munificent/craftinginterpreters">munificent/craftinginterpreters</a>
 
 ## Setup
  - Run `npm install` to install all dependencies
