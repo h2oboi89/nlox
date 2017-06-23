@@ -1,15 +1,24 @@
-expression -> equality
+program     -> statement* EOF
 
-equality   -> comparison ( ( "!=" | "==" ) comparison )*
+statement   -> exprStmt
+            | printStmt
 
-comparison -> term ( ( ">" | ">=" | "<" | "<=" ) term )*
+exprStmt    -> expression ";"
 
-term       -> factor ( ( "-" | "+" ) factor )*
+printStmt   -> "print" expression ";"
 
-factor     -> unary ( ( "/" | "*" ) unary )*
+expression  -> equality
 
-unary      -> ( "!" | "-" ) unary
+equality    -> comparison ( ( "!=" | "==" ) comparison )*
+
+comparison  -> term ( ( ">" | ">=" | "<" | "<=" ) term )*
+
+term        -> factor ( ( "-" | "+" ) factor )*
+
+factor      -> unary ( ( "/" | "*" ) unary )*
+
+unary       -> ( "!" | "-" ) unary
             | primary
 
-primary    -> NUMBER | STRING | "false" | "true" | "nil"
+primary     -> NUMBER | STRING | "false" | "true" | "nil"
             | "(" expression ")"
