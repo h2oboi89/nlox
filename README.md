@@ -2,7 +2,9 @@
 
 Lox interpreter written in Node JS.
 
-Based on http://craftinginterpreters.com/
+Based on Bob Nystrom's Lox book
+ - website: http://craftinginterpreters.com/
+ - github:  https://github.com/munificent/craftinginterpreters
 
 ## Running
 
