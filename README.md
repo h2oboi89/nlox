@@ -6,6 +6,9 @@ Based on Bob Nystrom's Lox book
  - website: http://craftinginterpreters.com/
  - github:  https://github.com/munificent/craftinginterpreters
 
+## Setup
+ - Run `npm install` to install all dependencies
+
 ## Running
 
 ### File
@@ -13,9 +16,6 @@ Based on Bob Nystrom's Lox book
 
 ### REPL
 `node index.js`
-
-## Setup
-- Run `npm install` to install all dependencies
 
 ## Scripts
 Following are called via `npm run`:
