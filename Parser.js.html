@@ -31,15 +31,17 @@
 const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
 
-const ExpressionStatement = require('./parsing/Statement/ExpressionStatement');
-const PrintStatement = require('./parsing/Statement/PrintStatement');
-const VariableStatement = require('./parsing/Statement/VariableStatement');
+const BlockStatement = require('./parsing/Statement/Block');
+const ExpressionStatement = require('./parsing/Statement/Expression');
+const PrintStatement = require('./parsing/Statement/Print');
+const VariableStatement = require('./parsing/Statement/Variable');
 
-const BinaryExpression = require('./parsing/Expression/BinaryExpression');
-const GroupingExpression = require('./parsing/Expression/GroupingExpression');
-const LiteralExpression = require('./parsing/Expression/LiteralExpression');
-const UnaryExpression = require('./parsing/Expression/UnaryExpression');
-const VariableExpression = require('./parsing/Expression/VariableExpression');
+const AssignmentExpression = require('./parsing/Expression/Assignment');
+const BinaryExpression = require('./parsing/Expression/Binary');
+const GroupingExpression = require('./parsing/Expression/Grouping');
+const LiteralExpression = require('./parsing/Expression/Literal');
+const UnaryExpression = require('./parsing/Expression/Unary');
+const VariableExpression = require('./parsing/Expression/Variable');
 
 class ParseError extends Error {
   constructor() {
@@ -167,6 +169,9 @@ class Parser {
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
+    else if (this._match(TokenType.LEFT_BRACE)) {
+      return new BlockStatement(this._block());
+    }
     else {
       return this._expressionStatement();
     }
@@ -180,6 +185,18 @@ class Parser {
     return new PrintStatement(value);
   }
 
+  _block() {
+    const statements = [];
+
+    while(!this._check(TokenType.RIGHT_BRACE) &amp;&amp; !this._isAtEnd()) {
+      statements.push(this._declaration());
+    }
+
+    this._consume(TokenType.RIGHT_BRACE, `Expect '}' at end of block.`);
+
+    return statements;
+  }
+
   _expressionStatement() {
     const expression = this._expression();
 
@@ -189,7 +206,26 @@ class Parser {
   }
 
   _expression() {
-    return this._equality();
+    return this._assignment();
+  }
+
+  _assignment() {
+    const expression = this._equality();
+
+    if (this._match(TokenType.EQUAL)) {
+      const equals = this._previous();
+      const value = this._assignment();
+
+      if(expression instanceof VariableExpression) {
+        const name = expression.name;
+
+        return new AssignmentExpression(name, value);
+      }
+
+      this._error(equals, 'Invalid assignment target.');
+    }
+
+    return expression;
   }
 
   _equality() {
@@ -320,13 +356,13 @@ module.exports = Parser;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.AssignmentExpression.html">parsing.AssignmentExpression</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.BlockStatement.html">parsing.BlockStatement</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Jun 23 2017 14:30:29 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 14:58:28 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: LoxError.js</title>
+    <title>JSDoc: Source: parsing/Statement/Variable.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: LoxError.js</h1>
+    <h1 class="page-title">Source: parsing/Statement/Variable.js</h1>
 
     
 
@@ -28,78 +28,37 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const TokenType = require('./TokenType');
-
-let _hadError = false;
-let _hadRuntimeError = false;
-
 /**
- * Error reporting mechanism for the interpreter.
+ * Represents a node in the AST.
+ * @memberof parsing
  */
-class LoxError {
-
+class VariableStatement {
   /**
-   * Whether or not an error occurred.
-   *
-   * @static
-   * @return {boolean}  True if an error occurred; otherwise false.
+   * Creates a new VariableStatement.
    */
-  static get hadError() {
-    return _hadError;
+  constructor(name, initializer) {
+    this._name = name;
+    this._initializer = initializer;
   }
 
-  static get hadRuntimeError() {
-    return _hadRuntimeError;
+  get name() {
+    return this._name;
   }
 
-  /**
-   * Resets the error state.
-   * @static
-   */
-  static reset() {
-    _hadError = false;
-    _hadRuntimeError = false;
-  }
-
-  static _report(line, where, message) {
-    console.error(`[line ${line}] Error ${where}: ${message}`);
-    _hadError = true;
+  get initializer() {
+    return this._initializer;
   }
 
   /**
-   * Error reporting method for the {@link Scanner}.
-   *
-   * @static
-   * @param  {number} line    Line the error occurred on.
-   * @param  {string} message Error message.
+   * Accepts a visitor.
+   * @param  {object} visitor entity that is traversing the AST
    */
-  static scanError(line, message) {
-    this._report(line, '', message);
-  }
-
-  /**
-   * Error reporting method for the {@link Parser}.
-   *
-   * @static
-   * @param  {Token}  token   Token the error occurred on.
-   * @param  {string} message Error message.
-   */
-  static parseError(token, message) {
-    if(token.type == TokenType.EOF) {
-      this._report(token.line, "at end", message);
-    }
-    else {
-      this._report(token.line, "at '" + token.lexeme + "'", message);
-    }
-  }
-
-  static runtimeError(error) {
-    console.log(`${error.message}\n[line ${error.token.line}]`);
-    _hadRuntimeError = true;
+  accept(visitor) {
+    return visitor.visitVariableStatement(this);
   }
 }
 
-module.exports = LoxError;
+module.exports = VariableStatement;
 </code></pre>
         </article>
     </section>
