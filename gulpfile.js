@@ -61,7 +61,8 @@ gulp.task('lint', () => {
 
   if(fail) {
     return lint.pipe(jshint.reporter('fail'));
-  } else {
+  }
+  else {
     return lint;
   }
 });

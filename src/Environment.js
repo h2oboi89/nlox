@@ -2,6 +2,9 @@
 
 const RuntimeError = require('./RuntimeError');
 
+/**
+ * Stores variable values during execution.
+ */
 class Environment {
   constructor(enclosing) {
     this._values = {};
@@ -21,6 +24,11 @@ class Environment {
     return this._values[name.lexeme] !== undefined;
   }
 
+  /**
+   * Defines a variable (var <var> = <value>;)
+   * @param {Token} name Variable name
+   * @param {object} value Variable value
+   */
   define(name, value) {
     if(!this._variableExists(name)) {
       this._values[name.lexeme] = value;
@@ -30,6 +38,12 @@ class Environment {
     }
   }
 
+
+  /**
+   * Assigns a new value to an existing variable (<var> = <value>;)
+   * @param {Token} name Variable name
+   * @param {object} value Variable value
+   */
   assign(name, value) {
     if(this._variableExists(name)) {
       this._values[name.lexeme] = value;
@@ -44,6 +58,10 @@ class Environment {
     }
   }
 
+  /**
+   * Gets current variable value.
+   * @param {Token} name Variable name
+   */
   get(name) {
     if(this._variableExists(name)) {
       return this._values[name.lexeme];

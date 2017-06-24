@@ -5,6 +5,9 @@ const TokenType = require('./TokenType');
 const RuntimeError = require('./RuntimeError');
 const Environment = require('./Environment');
 
+/**
+ * Executes an AST in order to run Lox code.
+ */
 class Interpreter {
   constructor() {
     this._environment = new Environment();

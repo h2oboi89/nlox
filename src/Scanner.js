@@ -22,7 +22,6 @@ const KEYWORDS = {
   'while': TokenType.WHILE
 };
 
-
 /**
  * Converts Lox source code into a series of {@link Token}s.
  */
@@ -219,7 +218,6 @@ class Scanner {
         break;
     }
   }
-
 
   /**
    * Scans source and converts it into {@link Token}s.
