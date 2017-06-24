@@ -8,6 +8,7 @@ const istanbul = require('gulp-istanbul');
 const runSequence = require('run-sequence');
 const tap = require('gulp-tap');
 const path = require('path');
+const sloc = require('gulp-sloc');
 
 const source = ['./src/**/*.js', './index.js'];
 const sample = ['./sample/**/*.js'];
@@ -67,6 +68,11 @@ gulp.task('lint', () => {
   }
 });
 
+gulp.task('sloc', () => {
+  gulp.src(source)
+    .pipe(sloc());
+});
+
 gulp.task('default', () => {
-  runSequence('lint', 'test');
+  runSequence('lint', 'test', 'sloc');
 });
