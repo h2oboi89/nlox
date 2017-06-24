@@ -10,7 +10,7 @@ const templateFile = path.join(__dirname, 'template.txt');
 
 function generateType(type, fields, suffix) {
   const className = `${type}${suffix}`;
-  const classFile = path.join(outputDirectory, suffix, `${className}.js`);
+  const classFile = path.join(outputDirectory, suffix, `${type}.js`);
 
   console.log(` - ${className} : ${fields.join(', ')}`);
 
@@ -61,6 +61,7 @@ function main() {
       console.log('Generating AST Statements...');
 
       return generateAst([
+        'Block      : statements',
         'Expression : expression',
         'Print      : expression',
         'Variable   : name, initializer'
