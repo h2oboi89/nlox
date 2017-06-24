@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Interpreter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Interpreter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const LoxError = require('./LoxError');
+const TokenType = require('./TokenType');
+const RuntimeError = require('./RuntimeError');
+const Environment = require('./Environment');
+
+/**
+ * Executes an AST in order to run Lox code.
+ */
+class Interpreter {
+  constructor() {
+    this._environment = new Environment();
+  }
+
+  _evaluate(expression) {
+    return expression.accept(this);
+  }
+
+  _execute(statement) {
+    statement.accept(this);
+  }
+
+  _executeBlock(statements, environment) {
+    const enclosingEnvironment = this._environment;
+
+    try {
+      this._environment = environment;
+
+      for(let statement of statements) {
+        this._execute(statement);
+      }
+    }
+    finally {
+      this._environment = enclosingEnvironment;
+    }
+  }
+
+  static _isTruthy(expression) {
+    if(expression === null) {
+      return false;
+    }
+    if(typeof expression === 'boolean') {
+      return expression;
+    }
+    return true;
+  }
+
+  static _isEqual(a, b) {
+    if(a === null) {
+      return b === null;
+    }
+
+    return a === b;
+  }
+
+  static _CheckNumberOperands(operator, ...args) {
+    const message = `${args.length > 1 ? 'Operands' : 'Operand'} must be a number.`;
+
+    for(let arg of args) {
+      if(typeof arg !== 'number') {
+        throw new RuntimeError(operator, message);
+      }
+    }
+  }
+
+  visitBlockStatement(statement) {
+    this._executeBlock(statement.statements, new Environment(this._environment));
+  }
+
+  visitExpressionStatement(statement) {
+    this._evaluate(statement.expression);
+  }
+
+  visitPrintStatement(statement) {
+    const value = this._evaluate(statement.expression);
+    console.log(Interpreter._stringify(value));
+  }
+
+  visitVariableStatement(statement) {
+    let value;
+
+    if (statement.initializer) {
+      value = this._evaluate(statement.initializer);
+    }
+
+    this._environment.define(statement.name, value);
+  }
+
+  visitAssignmentExpression(expression) {
+    const value = this._evaluate(expression.value);
+
+    this._environment.assign(expression.name, value);
+
+    return value;
+  }
+
+  visitBinaryExpression(expression) {
+    const left = this._evaluate(expression.left);
+    const right = this._evaluate(expression.right);
+
+    switch(expression.operator.type) {
+      // Arithmetic
+      case TokenType.MINUS:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left - right;
+      case TokenType.PLUS:
+        if(typeof left === 'string' || typeof right === 'string') {
+          return left + right;
+        }
+        if(typeof left === 'number' &amp;&amp; typeof right === 'number') {
+          return left + right;
+        }
+        throw new RuntimeError(expression.operator, 'Operands must be two numbers or strings.');
+      case TokenType.SLASH:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left / right;
+      case TokenType.STAR:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left * right;
+        // Comparison
+      case TokenType.GREATER:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left > right;
+      case TokenType.GREATER_EQUAL:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left >= right;
+      case TokenType.LESS:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left &lt; right;
+      case TokenType.LESS_EQUAL:
+        Interpreter._CheckNumberOperands(expression.operator, left, right);
+        return left &lt;= right;
+        // Equality
+      case TokenType.BANG_EQUAL:
+        return !Interpreter._isEqual(left, right);
+      case TokenType.EQUAL_EQUAL:
+        return Interpreter._isEqual(left, right);
+    }
+  }
+
+  visitGroupingExpression(expression) {
+    return this._evaluate(expression.expression);
+  }
+
+  visitLiteralExpression(expression) {
+    return expression.value;
+  }
+
+  visitUnaryExpression(expression) {
+    const right = this._evaluate(expression.right);
+
+    switch(expression.operator.type) {
+      case TokenType.MINUS:
+        Interpreter._CheckNumberOperands(expression.operator, right);
+        return -1 * right;
+      case TokenType.BANG:
+        return !Interpreter._isTruthy(right);
+    }
+  }
+
+  visitVariableExpression(expression) {
+    return this._environment.get(expression.name);
+  }
+
+  static _stringify(value) {
+    if(value === null) {
+      return 'nil';
+    }
+
+    return `${value}`;
+  }
+
+  interpret(statements) {
+    try {
+      for(let statement of statements) {
+        this._execute(statement);
+      }
+    }
+    catch(error) {
+      if(error instanceof RuntimeError) {
+        LoxError.runtimeError(error);
+      }
+      else {
+        throw error;
+      }
+    }
+  }
+}
+
+module.exports = Interpreter;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.AssignmentExpression.html">parsing.AssignmentExpression</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.BlockStatement.html">parsing.BlockStatement</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 17:11:39 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

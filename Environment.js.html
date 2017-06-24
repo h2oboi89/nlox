@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: BinaryExpression</title>
+    <title>JSDoc: Source: Environment.js</title>
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -11,68 +12,119 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
+
 <body>
+
 <div id="main">
-    <h1 class="page-title">Class: BinaryExpression</h1>
-<section>
-<header>
-        <h2>BinaryExpression</h2>
-            <div class="class-description"><p>Represents a node in the AST.</p></div>
-</header>
-<article>
-    <div class="container-overview">
-    <h2>Constructor</h2>
-    <h4 class="name" id="BinaryExpression"><span class="type-signature"></span>new BinaryExpression<span class="signature">()</span><span class="type-signature"></span></h4>
-<div class="description">
-    <p>Creates a new BinaryExpression.</p>
+
+    <h1 class="page-title">Source: Environment.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const RuntimeError = require('./RuntimeError');
+
+/**
+ * Stores variable values during execution.
+ */
+class Environment {
+  constructor(enclosing) {
+    this._values = {};
+
+    this._enclosing = enclosing;
+  }
+
+  static _throwUndefinedError(name) {
+    throw new RuntimeError(name, `Undefined variable '${name.lexeme}'.`);
+  }
+
+  static _throwDefinedError(name) {
+    throw new RuntimeError(name, `'${name.lexeme}' has already been defined.`);
+  }
+
+  _variableExists(name) {
+    return this._values[name.lexeme] !== undefined;
+  }
+
+  /**
+   * Defines a variable (var &lt;var> = &lt;value>;)
+   * @param {Token} name Variable name
+   * @param {object} value Variable value
+   */
+  define(name, value) {
+    if(!this._variableExists(name)) {
+      this._values[name.lexeme] = value;
+    }
+    else {
+      Environment._throwDefinedError(name);
+    }
+  }
+
+
+  /**
+   * Assigns a new value to an existing variable (&lt;var> = &lt;value>;)
+   * @param {Token} name Variable name
+   * @param {object} value Variable value
+   */
+  assign(name, value) {
+    if(this._variableExists(name)) {
+      this._values[name.lexeme] = value;
+    }
+    else {
+      if(this._enclosing !== undefined) {
+        this._enclosing.assign(name, value);
+      }
+      else {
+        Environment._throwUndefinedError(name);
+      }
+    }
+  }
+
+  /**
+   * Gets current variable value.
+   * @param {Token} name Variable name
+   */
+  get(name) {
+    if(this._variableExists(name)) {
+      return this._values[name.lexeme];
+    }
+    else {
+      if(this._enclosing !== undefined) {
+        return this._enclosing.get(name);
+      }
+      else {
+        Environment._throwUndefinedError(name);
+      }
+    }
+  }
+}
+
+module.exports = Environment;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
 </div>
-<dl class="details">
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="parsing_Expression_Binary.js.html">parsing/Expression/Binary.js</a>, <a href="parsing_Expression_Binary.js.html#line7">line 7</a>
-    </li></ul></dd>
-</dl>
-    </div>
-        <h3 class="subsection-title">Methods</h3>
-    <h4 class="name" id="accept"><span class="type-signature"></span>accept<span class="signature">(visitor)</span><span class="type-signature"></span></h4>
-<div class="description">
-    <p>Accepts a visitor.</p>
-</div>
-    <h5>Parameters:</h5>
-<table class="params">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr>
-                <td class="name"><code>visitor</code></td>
-            <td class="type">
-<span class="param-type">object</span>
-            </td>
-            <td class="description last"><p>entity that is traversing the AST</p></td>
-        </tr>
-    </tbody>
-</table>
-<dl class="details">
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="parsing_Expression_Binary.js.html">parsing/Expression/Binary.js</a>, <a href="parsing_Expression_Binary.js.html#line33">line 33</a>
-    </li></ul></dd>
-</dl>
-</article>
-</section>
-</div>
+
 <nav>
     <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.AssignmentExpression.html">parsing.AssignmentExpression</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.BlockStatement.html">parsing.BlockStatement</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
 </nav>
+
 <br class="clear">
+
 <footer>
     Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 17:11:39 GMT-0400 (Eastern Daylight Time)
 </footer>
+
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>
 </body>

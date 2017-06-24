@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: LoxError</title>
+    <title>JSDoc: Class: Environment</title>
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -13,38 +13,27 @@
 </head>
 <body>
 <div id="main">
-    <h1 class="page-title">Class: LoxError</h1>
+    <h1 class="page-title">Class: Environment</h1>
 <section>
 <header>
-        <h2>LoxError</h2>
-            <div class="class-description"><p>Error reporting mechanism for the interpreter.</p></div>
+        <h2>Environment</h2>
+            <div class="class-description"><p>Stores variable values during execution.</p></div>
 </header>
 <article>
     <div class="container-overview">
     <h2>Constructor</h2>
-    <h4 class="name" id="LoxError"><span class="type-signature"></span>new LoxError<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Environment"><span class="type-signature"></span>new Environment<span class="signature">()</span><span class="type-signature"></span></h4>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line11">line 11</a>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line8">line 8</a>
     </li></ul></dd>
 </dl>
     </div>
-        <h3 class="subsection-title">Members</h3>
-<h4 class="name" id=".hadError"><span class="type-signature">(static) </span>hadError<span class="type-signature"></span></h4>
-<div class="description">
-    <p>Whether or not an error occurred.</p>
-</div>
-<dl class="details">
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line19">line 19</a>
-    </li></ul></dd>
-</dl>
         <h3 class="subsection-title">Methods</h3>
-    <h4 class="name" id=".parseError"><span class="type-signature">(static) </span>parseError<span class="signature">(token, message)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="assign"><span class="type-signature"></span>assign<span class="signature">(name, value)</span><span class="type-signature"></span></h4>
 <div class="description">
-    <p>Error reporting method for the <a href="Parser.html"><code>Parser</code></a>.</p>
+    <p>Assigns a new value to an existing variable (<var> = <value>;)</p>
 </div>
     <h5>Parameters:</h5>
 <table class="params">
@@ -57,40 +46,30 @@
     </thead>
     <tbody>
         <tr>
-                <td class="name"><code>token</code></td>
+                <td class="name"><code>name</code></td>
             <td class="type">
 <span class="param-type"><a href="Token.html">Token</a></span>
             </td>
-            <td class="description last"><p>Token the error occurred on.</p></td>
+            <td class="description last"><p>Variable name</p></td>
         </tr>
         <tr>
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>value</code></td>
             <td class="type">
-<span class="param-type">string</span>
+<span class="param-type">object</span>
             </td>
-            <td class="description last"><p>Error message.</p></td>
+            <td class="description last"><p>Variable value</p></td>
         </tr>
     </tbody>
 </table>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line59">line 59</a>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line47">line 47</a>
     </li></ul></dd>
 </dl>
-    <h4 class="name" id=".reset"><span class="type-signature">(static) </span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="define"><span class="type-signature"></span>define<span class="signature">(name, value)</span><span class="type-signature"></span></h4>
 <div class="description">
-    <p>Resets the error state.</p>
-</div>
-<dl class="details">
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line31">line 31</a>
-    </li></ul></dd>
-</dl>
-    <h4 class="name" id=".scanError"><span class="type-signature">(static) </span>scanError<span class="signature">(line, message)</span><span class="type-signature"></span></h4>
-<div class="description">
-    <p>Error reporting method for the <a href="Scanner.html"><code>Scanner</code></a>.</p>
+    <p>Defines a variable (var <var> = <value>;)</p>
 </div>
     <h5>Parameters:</h5>
 <table class="params">
@@ -103,25 +82,54 @@
     </thead>
     <tbody>
         <tr>
-                <td class="name"><code>line</code></td>
+                <td class="name"><code>name</code></td>
             <td class="type">
-<span class="param-type">number</span>
+<span class="param-type"><a href="Token.html">Token</a></span>
             </td>
-            <td class="description last"><p>Line the error occurred on.</p></td>
+            <td class="description last"><p>Variable name</p></td>
         </tr>
         <tr>
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>value</code></td>
             <td class="type">
-<span class="param-type">string</span>
+<span class="param-type">object</span>
             </td>
-            <td class="description last"><p>Error message.</p></td>
+            <td class="description last"><p>Variable value</p></td>
         </tr>
     </tbody>
 </table>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line48">line 48</a>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line32">line 32</a>
+    </li></ul></dd>
+</dl>
+    <h4 class="name" id="get"><span class="type-signature"></span>get<span class="signature">(name)</span><span class="type-signature"></span></h4>
+<div class="description">
+    <p>Gets current variable value.</p>
+</div>
+    <h5>Parameters:</h5>
+<table class="params">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+                <td class="name"><code>name</code></td>
+            <td class="type">
+<span class="param-type"><a href="Token.html">Token</a></span>
+            </td>
+            <td class="description last"><p>Variable name</p></td>
+        </tr>
+    </tbody>
+</table>
+<dl class="details">
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line65">line 65</a>
     </li></ul></dd>
 </dl>
 </article>
