@@ -3,8 +3,10 @@
 const RuntimeError = require('./RuntimeError');
 
 class Environment {
-  constructor() {
+  constructor(enclosing) {
     this._values = {};
+
+    this._enclosing = enclosing;
   }
 
   static _throwUndefinedError(name) {
@@ -33,15 +35,26 @@ class Environment {
       this._values[name.lexeme] = value;
     }
     else {
-      Environment._throwUndefinedError(name);
+      if(this._enclosing !== undefined) {
+        this._enclosing.assign(name, value);
+      }
+      else {
+        Environment._throwUndefinedError(name);
+      }
     }
   }
 
   get(name) {
     if(this._variableExists(name)) {
       return this._values[name.lexeme];
-    } else {
-      Environment._throwUndefinedError(name);
+    }
+    else {
+      if(this._enclosing !== undefined) {
+        return this._enclosing.get(name);
+      }
+      else {
+        Environment._throwUndefinedError(name);
+      }
     }
   }
 }

@@ -10,12 +10,27 @@ class Interpreter {
     this._environment = new Environment();
   }
 
+  _evaluate(expression) {
+    return expression.accept(this);
+  }
+
   _execute(statement) {
     statement.accept(this);
   }
 
-  _evaluate(expression) {
-    return expression.accept(this);
+  _executeBlock(statements, environment) {
+    const enclosingEnvironment = this._environment;
+
+    try {
+      this._environment = environment;
+
+      for(let statement of statements) {
+        this._execute(statement);
+      }
+    }
+    finally {
+      this._environment = enclosingEnvironment;
+    }
   }
 
   static _isTruthy(expression) {
@@ -44,6 +59,10 @@ class Interpreter {
         throw new RuntimeError(operator, message);
       }
     }
+  }
+
+  visitBlockStatement(statement) {
+    this._executeBlock(statement.statements, new Environment(this._environment));
   }
 
   visitExpressionStatement(statement) {

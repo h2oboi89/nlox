@@ -3,16 +3,17 @@
 const LoxError = require('./LoxError');
 const TokenType = require('./TokenType');
 
-const ExpressionStatement = require('./parsing/Statement/ExpressionStatement');
-const PrintStatement = require('./parsing/Statement/PrintStatement');
-const VariableStatement = require('./parsing/Statement/VariableStatement');
+const BlockStatement = require('./parsing/Statement/Block');
+const ExpressionStatement = require('./parsing/Statement/Expression');
+const PrintStatement = require('./parsing/Statement/Print');
+const VariableStatement = require('./parsing/Statement/Variable');
 
-const AssignmentExpression = require('./parsing/Expression/AssignmentExpression');
-const BinaryExpression = require('./parsing/Expression/BinaryExpression');
-const GroupingExpression = require('./parsing/Expression/GroupingExpression');
-const LiteralExpression = require('./parsing/Expression/LiteralExpression');
-const UnaryExpression = require('./parsing/Expression/UnaryExpression');
-const VariableExpression = require('./parsing/Expression/VariableExpression');
+const AssignmentExpression = require('./parsing/Expression/Assignment');
+const BinaryExpression = require('./parsing/Expression/Binary');
+const GroupingExpression = require('./parsing/Expression/Grouping');
+const LiteralExpression = require('./parsing/Expression/Literal');
+const UnaryExpression = require('./parsing/Expression/Unary');
+const VariableExpression = require('./parsing/Expression/Variable');
 
 class ParseError extends Error {
   constructor() {
@@ -140,6 +141,9 @@ class Parser {
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
+    else if (this._match(TokenType.LEFT_BRACE)) {
+      return new BlockStatement(this._block());
+    }
     else {
       return this._expressionStatement();
     }
@@ -151,6 +155,18 @@ class Parser {
     this._consume(TokenType.SEMICOLON, "Expect ';' after value.");
 
     return new PrintStatement(value);
+  }
+
+  _block() {
+    const statements = [];
+
+    while(!this._check(TokenType.RIGHT_BRACE) && !this._isAtEnd()) {
+      statements.push(this._declaration());
+    }
+
+    this._consume(TokenType.RIGHT_BRACE, `Expect '}' at end of block.`);
+
+    return statements;
   }
 
   _expressionStatement() {
