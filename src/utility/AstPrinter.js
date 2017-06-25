@@ -21,7 +21,9 @@ class AstPrinter {
   }
 
   _parenthesize(name, ...expressions) {
-    return `( ${name} ${expressions.map((e) => e.accept(this)).join(' ')} )`;
+    expressions = expressions.map((e) => e.accept(this)).join(' ');
+
+    return `( ${name}${expressions.length > 0 ? ` ${expressions}` : ''} )`;
   }
 
   visitExpressionStatement(statement) {
@@ -30,6 +32,10 @@ class AstPrinter {
 
   visitPrintStatement(printStatement) {
     return this._paranthesize('print', printStatement.expression);
+  }
+
+  visitAssignmentExpression(expression) {
+    return this._parenthesize(`assign ${expression.name.lexeme}`, expression.value);
   }
 
   /**
@@ -66,6 +72,10 @@ class AstPrinter {
    */
   visitUnaryExpression(expression) {
     return this._parenthesize(expression.operator.lexeme, expression.right);
+  }
+
+  visitVariableExpression(expression) {
+    return this._parenthesize(`var ${expression.name.lexeme}`);
   }
 }
 
