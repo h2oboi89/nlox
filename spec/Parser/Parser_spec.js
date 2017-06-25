@@ -4,15 +4,15 @@ describe('Parser', () => {
   const mach = require('mach.js');
   const proxyquire = require('proxyquire');
 
-  const AstPrinter = require('../src/utility/AstPrinter');
-  const Token = require('../src/Token');
-  const TokenType = require('../src/TokenType');
+  const AstPrinter = require('../../src/utility/AstPrinter');
+  const Token = require('../../src/Token');
+  const TokenType = require('../../src/TokenType');
 
   const mockLoxError = mach.mockObject({
     parseError: () => {}
   }, 'LoxError');
 
-  const Parser = proxyquire('../src/Parser', {
+  const Parser = proxyquire('../../src/Parser', {
     './LoxError': mockLoxError
   });
 

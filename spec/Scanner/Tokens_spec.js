@@ -4,14 +4,14 @@ describe('Scanner', () => {
   const mach = require('mach.js');
   const proxyquire = require('proxyquire');
 
-  const Token = require('../src/Token');
-  const TokenType = require('../src/TokenType');
+  const Token = require('../../src/Token');
+  const TokenType = require('../../src/TokenType');
 
   const mockLoxError = mach.mockObject({
     scanError: () => {}
   }, 'LoxError');
 
-  const Scanner = proxyquire('../src/Scanner', {
+  const Scanner = proxyquire('../../src/Scanner', {
     './LoxError': mockLoxError
   });
 
@@ -260,36 +260,6 @@ describe('Scanner', () => {
     });
   });
 
-  describe('should scan complicated input', () => {
-    it('Section 4.6', () => {
-      const source = [
-        '// this is a comment',
-        '(( )){} // grouping stuff',
-        '!*+-/=<> <= == // operators'
-      ];
-
-      expect(scanner.scanTokens(source.join('\n'))).toEqual([
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
-        new Token(TokenType.LEFT_BRACE, '{', undefined, 2),
-        new Token(TokenType.RIGHT_BRACE, '}', undefined, 2),
-        new Token(TokenType.BANG, '!', undefined, 3),
-        new Token(TokenType.STAR, '*', undefined, 3),
-        new Token(TokenType.PLUS, '+', undefined, 3),
-        new Token(TokenType.MINUS, '-', undefined, 3),
-        new Token(TokenType.SLASH, '/', undefined, 3),
-        new Token(TokenType.EQUAL, '=', undefined, 3),
-        new Token(TokenType.LESS, '<', undefined, 3),
-        new Token(TokenType.GREATER, '>', undefined, 3),
-        new Token(TokenType.LESS_EQUAL, '<=', undefined, 3),
-        new Token(TokenType.EQUAL_EQUAL, '==', undefined, 3),
-        new Token(TokenType.EOF, '', undefined, 3)
-      ]);
-    });
-  });
-
   describe('should scan strings', () => {
     it('single quote (\') string', () => {
       expect(scanner.scanTokens('\'Hello, World!\'')).toEqual([
@@ -486,7 +456,43 @@ describe('Scanner', () => {
     });
   });
 
+  describe('should reject invalid characters', () => {
+    it('simple', () => {
+      mockLoxError.scanError.shouldBeCalledWith(1, 'Unexpected character: \'%\'')
+        .when(() => scanner.scanTokens('%'));
+    });
+  });
+
+  // TODO: move to own file
   describe('complicated input', () => {
+    it('Section 4.6', () => {
+      const source = [
+        '// this is a comment',
+        '(( )){} // grouping stuff',
+        '!*+-/=<> <= == // operators'
+      ];
+
+      expect(scanner.scanTokens(source.join('\n'))).toEqual([
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
+        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
+        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
+        new Token(TokenType.LEFT_BRACE, '{', undefined, 2),
+        new Token(TokenType.RIGHT_BRACE, '}', undefined, 2),
+        new Token(TokenType.BANG, '!', undefined, 3),
+        new Token(TokenType.STAR, '*', undefined, 3),
+        new Token(TokenType.PLUS, '+', undefined, 3),
+        new Token(TokenType.MINUS, '-', undefined, 3),
+        new Token(TokenType.SLASH, '/', undefined, 3),
+        new Token(TokenType.EQUAL, '=', undefined, 3),
+        new Token(TokenType.LESS, '<', undefined, 3),
+        new Token(TokenType.GREATER, '>', undefined, 3),
+        new Token(TokenType.LESS_EQUAL, '<=', undefined, 3),
+        new Token(TokenType.EQUAL_EQUAL, '==', undefined, 3),
+        new Token(TokenType.EOF, '', undefined, 3)
+      ]);
+    });
+
     it('(1 + 2) * (3 * 4)', () => {
       expect(scanner.scanTokens('(1 + 2) * (3 + 4)')).toEqual([
         new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
@@ -502,13 +508,6 @@ describe('Scanner', () => {
         new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
-    });
-  });
-
-  describe('should reject invalid characters', () => {
-    it('simple', () => {
-      mockLoxError.scanError.shouldBeCalledWith(1, 'Unexpected character: \'%\'')
-        .when(() => scanner.scanTokens('%'));
     });
   });
 });

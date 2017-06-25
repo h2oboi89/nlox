@@ -4,21 +4,21 @@ describe('Interpreter', () => {
   const mach = require('mach.js');
   const proxyquire = require('proxyquire');
 
-  const Token = require('../src/Token');
-  const TokenType = require('../src/TokenType');
+  const Token = require('../../src/Token');
+  const TokenType = require('../../src/TokenType');
 
-  const PrintStatement = require('../src/parsing/Statement/Print');
+  const PrintStatement = require('../../src/parsing/Statement/Print');
 
-  const LiteralExpression = require('../src/parsing/Expression/Literal');
-  const UnaryExpression = require('../src/parsing/Expression/Unary');
-  const BinaryExpression = require('../src/parsing/Expression/Binary');
-  const GroupingExpression = require('../src/parsing/Expression/Grouping');
+  const LiteralExpression = require('../../src/parsing/Expression/Literal');
+  const UnaryExpression = require('../../src/parsing/Expression/Unary');
+  const BinaryExpression = require('../../src/parsing/Expression/Binary');
+  const GroupingExpression = require('../../src/parsing/Expression/Grouping');
 
   const mockLoxError = mach.mockObject({
     runtimeError: () => {}
   }, 'LoxError');
 
-  const Interpreter = proxyquire('../src/Interpreter', {
+  const Interpreter = proxyquire('../../src/Interpreter', {
     './LoxError': mockLoxError
   });
 
