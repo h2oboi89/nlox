@@ -74,5 +74,5 @@ gulp.task('sloc', () => {
 });
 
 gulp.task('default', () => {
-  runSequence('lint', 'test', 'sloc');
+  runSequence('lint', 'test');
 });

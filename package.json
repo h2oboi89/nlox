@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "gulp",
+    "sloc": "gulp sloc",
     "docClone": "jsdocgen clone",
     "docGenerate": "jsdocgen generate",
     "docPublish": "jsdocgen publish",
