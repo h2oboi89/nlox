@@ -69,7 +69,10 @@ class Interpreter {
   }
 
   visitExpressionStatement(statement) {
-    this._evaluate(statement.expression);
+    const value = this._evaluate(statement.expression);
+    if(this._repl) {
+      console.log(Interpreter._stringify(value));
+    }
   }
 
   visitPrintStatement(statement) {
@@ -80,7 +83,7 @@ class Interpreter {
   visitVariableStatement(statement) {
     let value;
 
-    if (statement.initializer) {
+    if(statement.initializer) {
       value = this._evaluate(statement.initializer);
     }
 
@@ -171,7 +174,8 @@ class Interpreter {
     return `${value}`;
   }
 
-  interpret(statements) {
+  interpret(statements, repl = false) {
+    this._repl = repl;
     try {
       for(let statement of statements) {
         this._execute(statement);
@@ -184,6 +188,9 @@ class Interpreter {
       else {
         throw error;
       }
+    }
+    finally {
+      this._repl = false;
     }
   }
 }

@@ -16,7 +16,7 @@ const scanner = new Scanner();
 const parser = new Parser();
 const interpreter = new Interpreter();
 
-function run(source) {
+function run(source, repl) {
   if(LoxError.hadError) {
     process.exit(65);
   }
@@ -32,7 +32,7 @@ function run(source) {
       return;
     }
 
-    interpreter.interpret(statements);
+    interpreter.interpret(statements, repl);
   }
 }
 
@@ -45,7 +45,7 @@ function runPrompt() {
   rl.prompt();
 
   rl.on('line', (line) => {
-    run(line);
+    run(line, true);
 
     LoxError.reset();
 
