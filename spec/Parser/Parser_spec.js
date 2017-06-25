@@ -28,30 +28,6 @@ describe('Parser', () => {
     });
   });
 
-  describe('should handle unary expressions', () => {
-    it('!true', () => {
-      const tokens = [
-        new Token(TokenType.BANG, '!', undefined, 1),
-        new Token(TokenType.TRUE, 'true', undefined, 1),
-        SEMICOLON_TOKEN,
-        EOF_TOKEN
-      ];
-
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( ! true ) )');
-    });
-
-    it('-3', () => {
-      const tokens = [
-        new Token(TokenType.MINUS, '-', undefined, 1),
-        new Token(TokenType.NUMBER, '1', 3, 1),
-        SEMICOLON_TOKEN,
-        EOF_TOKEN
-      ];
-
-      expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( - 3 ) )');
-    });
-  });
-
   describe('should handle factor expressions', () => {
     it('6 * 9', () => {
       const tokens = [
@@ -204,7 +180,7 @@ describe('Parser', () => {
   });
 
   // TODO: multiline input
-  // TODO: invalid input
+  // TODO: invalid input (Expect expression)
   // TODO: exception (rethrow in parse) <- how?
   // TODO: verify synchronize
 });
