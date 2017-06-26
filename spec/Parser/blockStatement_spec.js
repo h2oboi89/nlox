@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Parser - block', () => {
+describe('Parser - blockStatement', () => {
   const common = require('./common');
 
   const astPrinter = common.astPrinter;
