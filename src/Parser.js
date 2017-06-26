@@ -142,7 +142,7 @@ class Parser {
       return this._printStatement();
     }
     else if (this._match(TokenType.LEFT_BRACE)) {
-      return new BlockStatement(this._block());
+      return new BlockStatement(this._blockStatement());
     }
     else {
       return this._expressionStatement();
@@ -157,7 +157,7 @@ class Parser {
     return new PrintStatement(value);
   }
 
-  _block() {
+  _blockStatement() {
     const statements = [];
 
     while(!this._check(TokenType.RIGHT_BRACE) && !this._isAtEnd()) {
