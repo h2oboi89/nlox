@@ -26,6 +26,12 @@ class AstPrinter {
     return `( ${name}${expressions.length > 0 ? ` ${expressions}` : ''} )`;
   }
 
+  visitBlockStatement(statement) {
+    const statements = statement.statements.map((s) => s.accept(this)).join(' ; ');
+
+    return `( block${statements.length > 0 ? ` ${statements}` : ''} )`;
+  }
+
   visitExpressionStatement(statement) {
     return this._parenthesize('statement', statement.expression);
   }
