@@ -132,7 +132,7 @@ class Parser {
       initializer = this._expression();
     }
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after variable declaration.`);
 
     return new VariableStatement(name, initializer);
   }
@@ -152,7 +152,7 @@ class Parser {
   _printStatement() {
     const value = this._expression();
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after value.`);
 
     return new PrintStatement(value);
   }
@@ -172,7 +172,7 @@ class Parser {
   _expressionStatement() {
     const expression = this._expression();
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after expression.`);
 
     return new ExpressionStatement(expression);
   }
