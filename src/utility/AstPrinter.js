@@ -21,7 +21,8 @@ class AstPrinter {
   }
 
   _parenthesize(name, ...expressions) {
-    expressions = expressions.map((e) => e.accept(this)).join(' ');
+    expressions = expressions.filter((e) => e !== undefined)
+      .map((e) => e.accept(this)).join(' ');
 
     return `( ${name}${expressions.length > 0 ? ` ${expressions}` : ''} )`;
   }
@@ -36,8 +37,12 @@ class AstPrinter {
     return this._parenthesize('statement', statement.expression);
   }
 
-  visitPrintStatement(printStatement) {
-    return this._parenthesize('print', printStatement.expression);
+  visitPrintStatement(statement) {
+    return this._parenthesize('print', statement.expression);
+  }
+
+  visitVariableStatement(statement) {
+    return this._parenthesize(`declare ${statement.name.lexeme}`, statement.initializer);
   }
 
   visitAssignmentExpression(expression) {

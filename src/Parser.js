@@ -124,7 +124,7 @@ class Parser {
   }
 
   _variableDeclaration() {
-    const name = this._consume(TokenType.IDENTIFIER, 'Expect variable name');
+    const name = this._consume(TokenType.IDENTIFIER, 'Expect variable name.');
 
     let initializer;
 
