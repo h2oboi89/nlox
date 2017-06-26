@@ -37,7 +37,7 @@ class AstPrinter {
   }
 
   visitPrintStatement(printStatement) {
-    return this._paranthesize('print', printStatement.expression);
+    return this._parenthesize('print', printStatement.expression);
   }
 
   visitAssignmentExpression(expression) {
