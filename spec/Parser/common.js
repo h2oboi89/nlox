@@ -15,9 +15,14 @@ const Parser = proxyquire('../../src/Parser', {
   './LoxError': mockLoxError
 });
 
+function sameToken(expected) {
+  return mach.same(expected, (actual, expected) => actual.toString() === expected);
+}
+
 module.exports = {
   astPrinter: new AstPrinter(),
   mockLoxError: mockLoxError,
+  sameToken: sameToken,
   scanner: new Scanner(),
   parser: new Parser()
 };

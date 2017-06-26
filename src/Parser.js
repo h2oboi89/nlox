@@ -283,7 +283,7 @@ class Parser {
       return new GroupingExpression(expression);
     }
 
-    throw this._error(this._peek(), 'Expect expression');
+    throw this._error(this._peek(), 'Expect expression.');
   }
 
   /**

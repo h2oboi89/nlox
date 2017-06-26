@@ -10,12 +10,14 @@ describe('Parser - factor', () => {
   it('6 * 9;', () => {
     const tokens = scanner.scanTokens('6 * 9;');
 
-    expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( * 6 9 ) )');
+    expect(astPrinter.print(parser.parse(tokens)))
+      .toEqual('( statement ( * 6 9 ) )');
   });
 
   it('6 / 9;', () => {
     const tokens = scanner.scanTokens('6 / 9;');
 
-    expect(astPrinter.print(parser.parse(tokens))).toEqual('( statement ( / 6 9 ) )');
+    expect(astPrinter.print(parser.parse(tokens)))
+      .toEqual('( statement ( / 6 9 ) )');
   });
 });
