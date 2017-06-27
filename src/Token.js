@@ -22,28 +22,28 @@ class Token {
   }
 
   /**
-   * @type {TokenType} This tokens type.
+   * @type {TokenType}
    */
   get type() {
     return this._type;
   }
 
   /**
-   * @type {string} Section of source code this token was parsed from.
+   * @type {string}
    */
   get lexeme() {
     return this._lexeme;
   }
 
   /**
-   * @type {string|number|undefined} For literal tokens: value that was derived from the source; otherwise undefined.
+   * @type {string|number|undefined}
    */
   get literal() {
     return this._literal;
   }
 
   /**
-   * @type {number} Line number of the source code this token was parsed from.
+   * @type {number}
    */
   get line() {
     return this._line;

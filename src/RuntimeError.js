@@ -17,7 +17,7 @@ class RuntimeError extends Error {
   }
 
   /**
-   * @type {Token} Token that caused the error.
+   * @type {Token}
    */
   get token() {
     return this._token;
