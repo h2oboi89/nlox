@@ -289,11 +289,11 @@ class Parser {
   }
 
   /**
-   * Parses {@link Token}s into an AST.
+   * Parses {@link Token}s into an collection of ASTs.
    * Will report errors using {@link LoxError}.
    *
    * @param  {Token[]} tokens Scanned tokens.
-   * @return {Expression} AST representing parsed source.
+   * @return {Statement[]} Collection of ASTs representing parsed source.
    */
   parse(tokens) {
     this._tokens = tokens;

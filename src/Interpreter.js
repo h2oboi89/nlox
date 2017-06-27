@@ -6,7 +6,7 @@ const RuntimeError = require('./RuntimeError');
 const Environment = require('./Environment');
 
 /**
- * Executes an AST in order to run Lox code.
+ * Executes a collection of ASTs in order to run Lox code.
  */
 class Interpreter {
   constructor() {
@@ -174,6 +174,12 @@ class Interpreter {
     return `${value}`;
   }
 
+  /**
+   * Interprets collection of ASTs in order to execute user input.
+   *
+   * @param  {Statement[]} statements Collection of statements representing parsed user input.
+   * @param  {boolean} repl = false If true then {@link ExpressionStatement}s will print their value; otherwise nothing.
+   */
   interpret(statements, repl = false) {
     this._repl = repl;
     try {

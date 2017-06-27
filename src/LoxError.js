@@ -11,7 +11,7 @@ let _hadRuntimeError = false;
 class LoxError {
 
   /**
-   * Whether or not an error occurred.
+   * Whether or not an error occurred during scanning or parsing.
    *
    * @static
    * @return {boolean}  True if an error occurred; otherwise false.
@@ -20,6 +20,12 @@ class LoxError {
     return _hadError;
   }
 
+  /**
+   * Whether or not an error occurred during runtime.
+   *
+   * @static
+   * @return {boolean} True if an error occurred; otherwise false.
+   */
   static get hadRuntimeError() {
     return _hadRuntimeError;
   }
@@ -42,8 +48,8 @@ class LoxError {
    * Error reporting method for the {@link Scanner}.
    *
    * @static
-   * @param  {number} line    Line the error occurred on.
-   * @param  {string} message Error message.
+   * @param {number} line    Line the error occurred on.
+   * @param {string} message Error message.
    */
   static scanError(line, message) {
     this._report(line, '', message);
@@ -53,8 +59,8 @@ class LoxError {
    * Error reporting method for the {@link Parser}.
    *
    * @static
-   * @param  {Token}  token   Token the error occurred on.
-   * @param  {string} message Error message.
+   * @param {Token}  token   Token the error occurred on.
+   * @param {string} message Error message.
    */
   static parseError(token, message) {
     if(token.type == TokenType.EOF) {
@@ -65,6 +71,12 @@ class LoxError {
     }
   }
 
+  /**
+   * Error reporting method for the {@link Interpreter}.
+   *
+   * @static
+   * @param {RuntimeError} error Error that occurred.
+   */
   static runtimeError(error) {
     console.log(`${error.message}\n[line ${error.token.line}]`);
     _hadRuntimeError = true;
