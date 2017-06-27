@@ -110,10 +110,12 @@ class Parser {
     try {
       if(this._match(TokenType.VAR)) {
         return this._variableDeclaration();
-      } else {
+      }
+      else {
         return this._statement();
       }
-    } catch(error) {
+    }
+    catch(error) {
       if(error instanceof ParseError) {
         this._synchronize();
       }
@@ -141,7 +143,7 @@ class Parser {
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
-    else if (this._match(TokenType.LEFT_BRACE)) {
+    else if(this._match(TokenType.LEFT_BRACE)) {
       return new BlockStatement(this._blockStatement());
     }
     else {
@@ -184,7 +186,7 @@ class Parser {
   _assignment() {
     const expression = this._equality();
 
-    if (this._match(TokenType.EQUAL)) {
+    if(this._match(TokenType.EQUAL)) {
       const equals = this._previous();
       const value = this._assignment();
 
@@ -301,7 +303,11 @@ class Parser {
       const statements = [];
 
       while(!this._isAtEnd()) {
-        statements.push(this._declaration());
+        const statement = this._declaration();
+
+        if(statement) {
+          statements.push(statement);
+        }
       }
 
       return statements;
