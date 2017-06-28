@@ -1,23 +1,13 @@
 'use strict';
 
 describe('Parser - unary', () => {
-  const common = require('./common');
-
-  const astPrinter = common.astPrinter;
-  const scanner = common.scanner;
-  const parser = common.parser;
+  const parseAndPrint = require('./common').parseAndPrint;
 
   it('!true;', () => {
-    const tokens = scanner.scanTokens('!true;');
-
-    expect(astPrinter.print(parser.parse(tokens)))
-      .toEqual('( statement ( ! true ) )');
+    parseAndPrint('!true;', '( statement ( ! true ) )');
   });
 
   it('-3;', () => {
-    const tokens = scanner.scanTokens('-3;');
-
-    expect(astPrinter.print(parser.parse(tokens)))
-      .toEqual('( statement ( - 3 ) )');
+    parseAndPrint('-3;', '( statement ( - 3 ) )');
   });
 });
