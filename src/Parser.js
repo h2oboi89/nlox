@@ -110,10 +110,12 @@ class Parser {
     try {
       if(this._match(TokenType.VAR)) {
         return this._variableDeclaration();
-      } else {
+      }
+      else {
         return this._statement();
       }
-    } catch(error) {
+    }
+    catch(error) {
       if(error instanceof ParseError) {
         this._synchronize();
       }
@@ -124,7 +126,7 @@ class Parser {
   }
 
   _variableDeclaration() {
-    const name = this._consume(TokenType.IDENTIFIER, 'Expect variable name');
+    const name = this._consume(TokenType.IDENTIFIER, 'Expect variable name.');
 
     let initializer;
 
@@ -132,7 +134,7 @@ class Parser {
       initializer = this._expression();
     }
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after variable declaration.`);
 
     return new VariableStatement(name, initializer);
   }
@@ -141,8 +143,8 @@ class Parser {
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
-    else if (this._match(TokenType.LEFT_BRACE)) {
-      return new BlockStatement(this._block());
+    else if(this._match(TokenType.LEFT_BRACE)) {
+      return new BlockStatement(this._blockStatement());
     }
     else {
       return this._expressionStatement();
@@ -152,12 +154,12 @@ class Parser {
   _printStatement() {
     const value = this._expression();
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after value.`);
 
     return new PrintStatement(value);
   }
 
-  _block() {
+  _blockStatement() {
     const statements = [];
 
     while(!this._check(TokenType.RIGHT_BRACE) && !this._isAtEnd()) {
@@ -172,7 +174,7 @@ class Parser {
   _expressionStatement() {
     const expression = this._expression();
 
-    this._consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+    this._consume(TokenType.SEMICOLON, `Expect ';' after expression.`);
 
     return new ExpressionStatement(expression);
   }
@@ -184,7 +186,7 @@ class Parser {
   _assignment() {
     const expression = this._equality();
 
-    if (this._match(TokenType.EQUAL)) {
+    if(this._match(TokenType.EQUAL)) {
       const equals = this._previous();
       const value = this._assignment();
 
@@ -283,15 +285,15 @@ class Parser {
       return new GroupingExpression(expression);
     }
 
-    throw this._error(this._peek(), 'Expect expression');
+    throw this._error(this._peek(), 'Expect expression.');
   }
 
   /**
-   * Parses {@link Token}s into an AST.
+   * Parses {@link Token}s into an collection of ASTs.
    * Will report errors using {@link LoxError}.
    *
    * @param  {Token[]} tokens Scanned tokens.
-   * @return {Expression} AST representing parsed source.
+   * @return {Statement[]} Collection of ASTs representing parsed source.
    */
   parse(tokens) {
     this._tokens = tokens;
@@ -301,7 +303,11 @@ class Parser {
       const statements = [];
 
       while(!this._isAtEnd()) {
-        statements.push(this._declaration());
+        const statement = this._declaration();
+
+        if(statement) {
+          statements.push(statement);
+        }
       }
 
       return statements;

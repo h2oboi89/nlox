@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Command line options for the Lox interpreter
+ * Command line options for the Lox interpreter.
  */
 const options = [{
     name: 'help',
@@ -17,6 +17,9 @@ const options = [{
   }
 ];
 
+/**
+ * Usage text for the Lox interpreter.
+ */
 const sections = [{
     header: 'nlox',
     content: 'Lox interpreter'

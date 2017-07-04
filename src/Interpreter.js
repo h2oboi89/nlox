@@ -6,7 +6,7 @@ const RuntimeError = require('./RuntimeError');
 const Environment = require('./Environment');
 
 /**
- * Executes an AST in order to run Lox code.
+ * Executes a collection of ASTs in order to run Lox code.
  */
 class Interpreter {
   constructor() {
@@ -64,12 +64,23 @@ class Interpreter {
     }
   }
 
+  static _stringify(value) {
+    if(value === null) {
+      return 'nil';
+    }
+
+    return `${value}`;
+  }
+
   visitBlockStatement(statement) {
     this._executeBlock(statement.statements, new Environment(this._environment));
   }
 
   visitExpressionStatement(statement) {
-    this._evaluate(statement.expression);
+    const value = this._evaluate(statement.expression);
+    if(this._repl) {
+      console.log(Interpreter._stringify(value));
+    }
   }
 
   visitPrintStatement(statement) {
@@ -78,9 +89,9 @@ class Interpreter {
   }
 
   visitVariableStatement(statement) {
-    let value;
+    let value = null;
 
-    if (statement.initializer) {
+    if(statement.initializer) {
       value = this._evaluate(statement.initializer);
     }
 
@@ -111,7 +122,7 @@ class Interpreter {
         if(typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        throw new RuntimeError(expression.operator, 'Operands must be two numbers or strings.');
+        throw new RuntimeError(expression.operator, 'Operands must numbers or strings.');
       case TokenType.SLASH:
         Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left / right;
@@ -163,15 +174,14 @@ class Interpreter {
     return this._environment.get(expression.name);
   }
 
-  static _stringify(value) {
-    if(value === null) {
-      return 'nil';
-    }
-
-    return `${value}`;
-  }
-
-  interpret(statements) {
+  /**
+   * Interprets collection of ASTs in order to execute user input.
+   *
+   * @param  {Statement[]} statements Collection of statements representing parsed user input.
+   * @param  {boolean} repl = false If true then {@link ExpressionStatement}s will print their value; otherwise nothing.
+   */
+  interpret(statements, repl = false) {
+    this._repl = repl;
     try {
       for(let statement of statements) {
         this._execute(statement);
@@ -184,6 +194,9 @@ class Interpreter {
       else {
         throw error;
       }
+    }
+    finally {
+      this._repl = false;
     }
   }
 }

@@ -260,36 +260,6 @@ describe('Scanner', () => {
     });
   });
 
-  describe('should scan complicated input', () => {
-    it('Section 4.6', () => {
-      const source = [
-        '// this is a comment',
-        '(( )){} // grouping stuff',
-        '!*+-/=<> <= == // operators'
-      ];
-
-      expect(scanner.scanTokens(source.join('\n'))).toEqual([
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 2),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 2),
-        new Token(TokenType.LEFT_BRACE, '{', undefined, 2),
-        new Token(TokenType.RIGHT_BRACE, '}', undefined, 2),
-        new Token(TokenType.BANG, '!', undefined, 3),
-        new Token(TokenType.STAR, '*', undefined, 3),
-        new Token(TokenType.PLUS, '+', undefined, 3),
-        new Token(TokenType.MINUS, '-', undefined, 3),
-        new Token(TokenType.SLASH, '/', undefined, 3),
-        new Token(TokenType.EQUAL, '=', undefined, 3),
-        new Token(TokenType.LESS, '<', undefined, 3),
-        new Token(TokenType.GREATER, '>', undefined, 3),
-        new Token(TokenType.LESS_EQUAL, '<=', undefined, 3),
-        new Token(TokenType.EQUAL_EQUAL, '==', undefined, 3),
-        new Token(TokenType.EOF, '', undefined, 3)
-      ]);
-    });
-  });
-
   describe('should scan strings', () => {
     it('single quote (\') string', () => {
       expect(scanner.scanTokens('\'Hello, World!\'')).toEqual([
@@ -315,6 +285,13 @@ describe('Scanner', () => {
     it('single quote inside double quote string', () => {
       expect(scanner.scanTokens('\"Fire the \'laser\'\"')).toEqual([
         new Token(TokenType.STRING, '\"Fire the \'laser\'\"', 'Fire the \'laser\'', 1),
+        new Token(TokenType.EOF, '', undefined, 1)
+      ]);
+    });
+
+    it('string with encoded newline', () => {
+      expect(scanner.scanTokens('\'foo\\nbar\'')).toEqual([
+        new Token(TokenType.STRING, '\'foo\\nbar\'', 'foo\\nbar', 1),
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
     });
@@ -481,25 +458,6 @@ describe('Scanner', () => {
         new Token(TokenType.IDENTIFIER, '_abc', undefined, 1),
         new Token(TokenType.IDENTIFIER, '_123', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'a1b', undefined, 1),
-        new Token(TokenType.EOF, '', undefined, 1)
-      ]);
-    });
-  });
-
-  describe('complicated input', () => {
-    it('(1 + 2) * (3 * 4)', () => {
-      expect(scanner.scanTokens('(1 + 2) * (3 + 4)')).toEqual([
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
-        new Token(TokenType.NUMBER, '1', 1, 1),
-        new Token(TokenType.PLUS, '+', undefined, 1),
-        new Token(TokenType.NUMBER, '2', 2, 1),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
-        new Token(TokenType.STAR, '*', undefined, 1),
-        new Token(TokenType.LEFT_PAREN, '(', undefined, 1),
-        new Token(TokenType.NUMBER, '3', 3, 1),
-        new Token(TokenType.PLUS, '+', undefined, 1),
-        new Token(TokenType.NUMBER, '4', 4, 1),
-        new Token(TokenType.RIGHT_PAREN, ')', undefined, 1),
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
     });

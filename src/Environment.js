@@ -25,9 +25,9 @@ class Environment {
   }
 
   /**
-   * Defines a variable (var <var> = <value>;)
+   * Defines a variable `(var <var> [= <value>];)`
    * @param {Token} name Variable name
-   * @param {object} value Variable value
+   * @param {object|undefined} value Variable value or undefined if nothing is assigned during declaration.
    */
   define(name, value) {
     if(!this._variableExists(name)) {
@@ -38,9 +38,8 @@ class Environment {
     }
   }
 
-
   /**
-   * Assigns a new value to an existing variable (<var> = <value>;)
+   * Assigns a new value to an existing variable `(<var> = <value>;`)
    * @param {Token} name Variable name
    * @param {object} value Variable value
    */
