@@ -18,19 +18,39 @@ const scanner = new Scanner();
 const parser = new Parser();
 
 const interpreter = new Interpreter();
+const globalConsoleLog = global.console.log;
+const mockConsoleLog = mach.mockFunction('console.log');
 
 function sameError(expected) {
-  return mach.same(expected, (actual, expected) => actual.messasge === expected);
+  return mach.same(expected, (actual, expected) => actual.message === expected);
 }
 
-function interpret(input) {
-  return interpreter.interpret(parser.parse(scanner.scanTokens(input)));
+function interpret(input, repl = true) {
+  return interpreter.interpret(parser.parse(scanner.scanTokens(input)), repl);
 }
 
-// TODO: interpret with error
+function beforeAll() {
+  global.console.log = mockConsoleLog;
+}
+
+function afterAll() {
+  global.console.log = globalConsoleLog;
+}
+
+function interpretAndPrint(input, expected) {
+  mockConsoleLog.shouldBeCalledWith(expected)
+    .when(() => interpret(input));
+}
+
+function interpretToError(input, expected) {
+  mockLoxError.runtimeError.shouldBeCalledWith(sameError(expected))
+    .when(() => interpret(input));
+}
 
 module.exports = {
-  mockLoxError: mockLoxError,
-  sameError: sameError,
-  interpret: interpret
+  beforeAll: beforeAll,
+  afterAll: afterAll,
+  interpret: interpret,
+  interpretAndPrint: interpretAndPrint,
+  interpretToError: interpretToError
 };

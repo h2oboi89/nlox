@@ -64,6 +64,14 @@ class Interpreter {
     }
   }
 
+  static _stringify(value) {
+    if(value === null) {
+      return 'nil';
+    }
+
+    return `${value}`;
+  }
+
   visitBlockStatement(statement) {
     this._executeBlock(statement.statements, new Environment(this._environment));
   }
@@ -81,7 +89,7 @@ class Interpreter {
   }
 
   visitVariableStatement(statement) {
-    let value;
+    let value = null;
 
     if(statement.initializer) {
       value = this._evaluate(statement.initializer);
@@ -114,7 +122,7 @@ class Interpreter {
         if(typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        throw new RuntimeError(expression.operator, 'Operands must be two numbers or strings.');
+        throw new RuntimeError(expression.operator, 'Operands must numbers or strings.');
       case TokenType.SLASH:
         Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left / right;
@@ -164,14 +172,6 @@ class Interpreter {
 
   visitVariableExpression(expression) {
     return this._environment.get(expression.name);
-  }
-
-  static _stringify(value) {
-    if(value === null) {
-      return 'nil';
-    }
-
-    return `${value}`;
   }
 
   /**
