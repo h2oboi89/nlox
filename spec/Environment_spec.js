@@ -10,6 +10,7 @@ describe('Environment', () => {
   const fooToken = new Token(null, 'foo');
   const barToken = new Token(null, 'bar');
   const bazToken = new Token(null, 'baz');
+  const FOOToken = new Token(null, 'FOO');
 
   beforeEach(() => {
     environment = new Environment();
@@ -40,6 +41,21 @@ describe('Environment', () => {
     environment.assign(fooToken, 10);
 
     expect(environment.get(fooToken)).toEqual(10);
+  });
+
+  it('should allow nil values', () => {
+    environment.define(fooToken, null);
+
+    expect(environment.get(fooToken)).toEqual(null);
+  });
+
+  it('capitalization matters', () => {
+    environment.define(fooToken, 10);
+
+    expect(environment.get(fooToken)).toEqual(10);
+
+    expect(() => environment.get(FOOToken))
+      .toThrowError(`Undefined variable 'FOO'.`);
   });
 
   it('should support block scopes', () => {
