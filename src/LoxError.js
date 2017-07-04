@@ -78,7 +78,7 @@ class LoxError {
    * @param {RuntimeError} error Error that occurred.
    */
   static runtimeError(error) {
-    console.log(`${error.message}\n[line ${error.token.line}]`);
+    console.error(`${error.message}\n[line ${error.token.line}]`);
     _hadRuntimeError = true;
   }
 }

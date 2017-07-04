@@ -6,6 +6,8 @@ describe('LoxError', () => {
   const Token = require('../src/Token');
   const TokenType = require('../src/TokenType');
 
+  const RuntimeError = require('../src/RuntimeError');
+
   const LoxError = require('../src/LoxError');
 
   let globalConsoleError;
@@ -51,6 +53,18 @@ describe('LoxError', () => {
         .when(() => LoxError.parseError(new Token(TokenType.TRUE, 'true', undefined, 9012), 'Oh noez!'));
 
       expect(LoxError.hadError).toEqual(true);
+    });
+  });
+
+  describe('runtimeError', () => {
+    it('should report runtime errors', () => {
+      expect(LoxError.hadRuntimeError).toEqual(false);
+
+      global.console.error.shouldBeCalledWith('Oh noez!\n[line 2017]')
+        .when(() => LoxError.runtimeError(
+          new RuntimeError(new Token(TokenType.VAR, 'a', undefined, 2017), 'Oh noez!')));
+
+      expect(LoxError.hadRuntimeError).toEqual(true);
     });
   });
 });
