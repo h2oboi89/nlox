@@ -33,12 +33,22 @@
         <h3 class="subsection-title">Members</h3>
 <h4 class="name" id=".hadError"><span class="type-signature">(static) </span>hadError<span class="type-signature"></span></h4>
 <div class="description">
-    <p>Whether or not an error occurred.</p>
+    <p>Whether or not an error occurred during scanning or parsing.</p>
 </div>
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line19">line 19</a>
+    </li></ul></dd>
+</dl>
+<h4 class="name" id=".hadRuntimeError"><span class="type-signature">(static) </span>hadRuntimeError<span class="type-signature"></span></h4>
+<div class="description">
+    <p>Whether or not an error occurred during runtime.</p>
+</div>
+<dl class="details">
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line29">line 29</a>
     </li></ul></dd>
 </dl>
         <h3 class="subsection-title">Methods</h3>
@@ -75,7 +85,7 @@
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line59">line 59</a>
+        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line65">line 65</a>
     </li></ul></dd>
 </dl>
     <h4 class="name" id=".reset"><span class="type-signature">(static) </span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -85,7 +95,36 @@
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line31">line 31</a>
+        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line37">line 37</a>
+    </li></ul></dd>
+</dl>
+    <h4 class="name" id=".runtimeError"><span class="type-signature">(static) </span>runtimeError<span class="signature">(error)</span><span class="type-signature"></span></h4>
+<div class="description">
+    <p>Error reporting method for the <a href="Interpreter.html"><code>Interpreter</code></a>.</p>
+</div>
+    <h5>Parameters:</h5>
+<table class="params">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+                <td class="name"><code>error</code></td>
+            <td class="type">
+<span class="param-type"><a href="RuntimeError.html">RuntimeError</a></span>
+            </td>
+            <td class="description last"><p>Error that occurred.</p></td>
+        </tr>
+    </tbody>
+</table>
+<dl class="details">
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line80">line 80</a>
     </li></ul></dd>
 </dl>
     <h4 class="name" id=".scanError"><span class="type-signature">(static) </span>scanError<span class="signature">(line, message)</span><span class="type-signature"></span></h4>
@@ -121,18 +160,18 @@
 <dl class="details">
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line48">line 48</a>
+        <a href="LoxError.js.html">LoxError.js</a>, <a href="LoxError.js.html#line54">line 54</a>
     </li></ul></dd>
 </dl>
 </article>
 </section>
 </div>
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.AssignmentExpression.html">parsing.AssignmentExpression</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.BlockStatement.html">parsing.BlockStatement</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AstPrinter.html">AstPrinter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Interpreter.html">Interpreter</a></li><li><a href="LoxError.html">LoxError</a></li><li><a href="Parser.html">Parser</a></li><li><a href="parsing.AssignmentExpression.html">parsing.AssignmentExpression</a></li><li><a href="parsing.BinaryExpression.html">parsing.BinaryExpression</a></li><li><a href="parsing.BlockStatement.html">parsing.BlockStatement</a></li><li><a href="parsing.ExpressionStatement.html">parsing.ExpressionStatement</a></li><li><a href="parsing.GroupingExpression.html">parsing.GroupingExpression</a></li><li><a href="parsing.LiteralExpression.html">parsing.LiteralExpression</a></li><li><a href="parsing.PrintStatement.html">parsing.PrintStatement</a></li><li><a href="parsing.UnaryExpression.html">parsing.UnaryExpression</a></li><li><a href="parsing.VariableExpression.html">parsing.VariableExpression</a></li><li><a href="parsing.VariableStatement.html">parsing.VariableStatement</a></li><li><a href="RuntimeError.html">RuntimeError</a></li><li><a href="Scanner.html">Scanner</a></li><li><a href="Token.html">Token</a></li></ul><h3>Global</h3><ul><li><a href="global.html#options">options</a></li><li><a href="global.html#sections">sections</a></li><li><a href="global.html#TokenType">TokenType</a></li></ul>
 </nav>
 <br class="clear">
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 17:11:39 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jul 05 2017 09:34:22 GMT-0400 (EDT)
 </footer>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>
