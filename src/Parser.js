@@ -5,6 +5,7 @@ const TokenType = require('./TokenType');
 
 const BlockStatement = require('./parsing/Statement/Block');
 const ExpressionStatement = require('./parsing/Statement/Expression');
+const IfStatement = require('./parsing/Statement/If');
 const PrintStatement = require('./parsing/Statement/Print');
 const VariableStatement = require('./parsing/Statement/Variable');
 
@@ -140,6 +141,9 @@ class Parser {
   }
 
   _statement() {
+    if(this._match(TokenType.IF)) {
+      return this._ifStatement();
+    }
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
@@ -149,6 +153,21 @@ class Parser {
     else {
       return this._expressionStatement();
     }
+  }
+
+  _ifStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'if'.`);
+    const condition = this._expression();
+    this._consume(TokenType.RIGHT_PAREN, `Expect ')' after if condition.`);
+
+    const thenBranch = this._statement();
+    let elseBranch;
+
+    if(this._match(TokenType.ELSE)) {
+      elseBranch = this._statement();
+    }
+
+    return new IfStatement(condition, thenBranch, elseBranch);
   }
 
   _printStatement() {

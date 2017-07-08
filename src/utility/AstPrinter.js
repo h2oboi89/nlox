@@ -39,6 +39,12 @@ class AstPrinter {
     return this._parenthesize('statement', statement.expression);
   }
 
+  visitIfStatement(statement) {
+    const elseBranch = statement.elseBranch ? ` else ${statement.elseBranch.accept(this)}` : '';
+
+    return `( if ${statement.condition.accept(this)} then ${statement.thenBranch.accept(this)}${elseBranch} )`;
+  }
+
   visitPrintStatement(statement) {
     return this._parenthesize('print', statement.expression);
   }

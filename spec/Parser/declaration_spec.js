@@ -37,6 +37,15 @@ describe('Parser - declaration', () => {
       );
     });
 
+    it('peek === IF', () => {
+      parseAndError(
+        'var 3 if (true) 1;',
+        'NUMBER 3 3',
+        'Expect variable name.',
+        '( if true then ( statement 1 ) )'
+      );
+    });
+
     it('multiple invalid characters', () => {
       parseAndError(
         'var 3 ! - ++ var bar;',

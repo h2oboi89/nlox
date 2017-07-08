@@ -83,6 +83,14 @@ class Interpreter {
     }
   }
 
+  visitIfStatement(statement) {
+    if(Interpreter._isTruthy(this._evaluate(statement.condition))) {
+      this._execute(statement.thenBranch);
+    } else if (statement.elseBranch) {
+      this._execute(statement.elseBranch);
+    }
+  }
+
   visitPrintStatement(statement) {
     const value = this._evaluate(statement.expression);
     console.log(Interpreter._stringify(value));

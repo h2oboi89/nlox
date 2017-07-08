@@ -63,6 +63,7 @@ function main() {
       return generateAst([
         'Block      : statements',
         'Expression : expression',
+        'If         : condition, thenBranch, elseBranch',
         'Print      : expression',
         'Variable   : name, initializer'
       ], 'Statement');
