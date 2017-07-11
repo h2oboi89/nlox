@@ -12,6 +12,7 @@ const VariableStatement = require('./parsing/Statement/Variable');
 const AssignmentExpression = require('./parsing/Expression/Assignment');
 const BinaryExpression = require('./parsing/Expression/Binary');
 const GroupingExpression = require('./parsing/Expression/Grouping');
+const LogicalExpression = require('./parsing/Expression/Logical');
 const LiteralExpression = require('./parsing/Expression/Literal');
 const UnaryExpression = require('./parsing/Expression/Unary');
 const VariableExpression = require('./parsing/Expression/Variable');
@@ -203,7 +204,7 @@ class Parser {
   }
 
   _assignment() {
-    const expression = this._equality();
+    const expression = this._or();
 
     if(this._match(TokenType.EQUAL)) {
       const equals = this._previous();
@@ -216,6 +217,34 @@ class Parser {
       }
 
       this._error(equals, 'Invalid assignment target.');
+    }
+
+    return expression;
+  }
+
+  _or() {
+    let expression = this._and();
+
+    while(this._match(TokenType.OR)) {
+      const operator = this._previous();
+
+      const right = this._and();
+
+      expression = new LogicalExpression(expression, operator, right);
+    }
+
+    return expression;
+  }
+
+  _and() {
+    let expression = this._equality();
+
+    while(this._match(TokenType.AND)) {
+      const operator = this._previous();
+
+      const right = this._equality();
+
+      expression = new LogicalExpression(expression, operator, right);
     }
 
     return expression;

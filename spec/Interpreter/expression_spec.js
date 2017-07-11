@@ -19,14 +19,26 @@ describe('Interpreter - expression', () => {
 
   describe('unary', () => {
     it('-1;', () => interpretAndPrint('-1;', '-1'));
-
     it('-false;', () => interpretToError('-false;', 'Operand must be a number.'));
 
     it('!true;', () => interpretAndPrint('!true;', 'false'));
-
     it('!nil;', () => interpretAndPrint('!nil;', 'true'));
-
     it('!3.14;', () => interpretAndPrint('!3.14;', 'false'));
+  });
+
+  describe('logical', () => {
+    it('false or false;', () => interpretAndPrint('false or false;', 'false'));
+    it('false or true;', () => interpretAndPrint('false or true;', 'true'));
+    it('true or false;', () => interpretAndPrint('true or false;', 'true'));
+    it('true or true;', () => interpretAndPrint('true or true;', 'true'));
+
+    it('false and false;', () => interpretAndPrint('false and false;', 'false'));
+    it('false and true;', () => interpretAndPrint('false and true;', 'false'));
+    it('true and false;', () => interpretAndPrint('true and false;', 'false'));
+    it('true and true;', () => interpretAndPrint('true and true;', 'true'));
+
+    it('"hi" or 2;', () => interpretAndPrint('"hi" or 2;', 'hi'));
+    it('nil or "yes";', () => interpretAndPrint('nil or "yes";', 'yes'));
   });
 
   describe('binary', () => {

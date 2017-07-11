@@ -70,6 +70,10 @@ class AstPrinter {
     return `${expression.value}`;
   }
 
+  visitLogicalExpression(expression) {
+    return this._parenthesize(expression.operator.lexeme, expression.left, expression.right);
+  }
+
   visitUnaryExpression(expression) {
     return this._parenthesize(expression.operator.lexeme, expression.right);
   }
