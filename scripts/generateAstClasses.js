@@ -53,6 +53,7 @@ function main() {
         'Binary     : left, operator, right',
         'Grouping   : expression',
         'Literal    : value',
+        'Logical   : left, operator, right',
         'Unary      : operator, right',
         'Variable   : name'
       ], 'Expression');
@@ -63,8 +64,10 @@ function main() {
       return generateAst([
         'Block      : statements',
         'Expression : expression',
+        'If         : condition, thenBranch, elseBranch',
         'Print      : expression',
-        'Variable   : name, initializer'
+        'Variable   : name, initializer',
+        'While      : condition, body'
       ], 'Statement');
     })
     .catch((error) => {

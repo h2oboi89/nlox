@@ -39,8 +39,18 @@ class AstPrinter {
     return this._parenthesize('statement', statement.expression);
   }
 
+  visitIfStatement(statement) {
+    const elseBranch = statement.elseBranch ? ` else ${statement.elseBranch.accept(this)}` : '';
+
+    return `( if ${statement.condition.accept(this)} then ${statement.thenBranch.accept(this)}${elseBranch} )`;
+  }
+
   visitPrintStatement(statement) {
     return this._parenthesize('print', statement.expression);
+  }
+
+  visitWhileStatement(statement) {
+    return `( while ${statement.condition.accept(this)} ${statement.body.accept(this)} )`;
   }
 
   visitVariableStatement(statement) {
@@ -62,6 +72,10 @@ class AstPrinter {
 
   visitLiteralExpression(expression) {
     return `${expression.value}`;
+  }
+
+  visitLogicalExpression(expression) {
+    return this._parenthesize(expression.operator.lexeme, expression.left, expression.right);
   }
 
   visitUnaryExpression(expression) {

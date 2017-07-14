@@ -383,19 +383,20 @@ describe('Scanner', () => {
 
   describe('should scan keywords and identifiers', () => {
     it('keywords', () => {
-      expect(scanner.scanTokens('and class else false fun if nil or')).toEqual([
+      expect(scanner.scanTokens('and class else false for fun if nil')).toEqual([
         new Token(TokenType.AND, 'and', undefined, 1),
         new Token(TokenType.CLASS, 'class', undefined, 1),
         new Token(TokenType.ELSE, 'else', undefined, 1),
         new Token(TokenType.FALSE, 'false', undefined, 1),
+        new Token(TokenType.FOR, 'for', undefined, 1),
         new Token(TokenType.FUN, 'fun', undefined, 1),
         new Token(TokenType.IF, 'if', undefined, 1),
         new Token(TokenType.NIL, 'nil', undefined, 1),
-        new Token(TokenType.OR, 'or', undefined, 1),
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
 
-      expect(scanner.scanTokens('print return super this true var while')).toEqual([
+      expect(scanner.scanTokens('or print return super this true var while')).toEqual([
+        new Token(TokenType.OR, 'or', undefined, 1),
         new Token(TokenType.PRINT, 'print', undefined, 1),
         new Token(TokenType.RETURN, 'return', undefined, 1),
         new Token(TokenType.SUPER, 'super', undefined, 1),
@@ -406,19 +407,20 @@ describe('Scanner', () => {
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
 
-      expect(scanner.scanTokens('AND CLASS ELSE FALSE FUN IF NIL OR')).toEqual([
+      expect(scanner.scanTokens('AND CLASS ELSE FALSE FOR FUN IF NIL')).toEqual([
         new Token(TokenType.IDENTIFIER, 'AND', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'CLASS', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'ELSE', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'FALSE', undefined, 1),
+        new Token(TokenType.IDENTIFIER, 'FOR', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'FUN', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'IF', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'NIL', undefined, 1),
-        new Token(TokenType.IDENTIFIER, 'OR', undefined, 1),
         new Token(TokenType.EOF, '', undefined, 1)
       ]);
 
-      expect(scanner.scanTokens('PRINT RETURN SUPER THIS TRUE VAR WHILE')).toEqual([
+      expect(scanner.scanTokens('OR PRINT RETURN SUPER THIS TRUE VAR WHILE')).toEqual([
+        new Token(TokenType.IDENTIFIER, 'OR', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'PRINT', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'RETURN', undefined, 1),
         new Token(TokenType.IDENTIFIER, 'SUPER', undefined, 1),

@@ -83,6 +83,21 @@ class Interpreter {
     }
   }
 
+  visitIfStatement(statement) {
+    if(Interpreter._isTruthy(this._evaluate(statement.condition))) {
+      this._execute(statement.thenBranch);
+    }
+    else if(statement.elseBranch) {
+      this._execute(statement.elseBranch);
+    }
+  }
+
+  visitWhileStatement(statement) {
+    while(Interpreter._isTruthy(this._evaluate(statement.condition))) {
+      this._execute(statement.body);
+    }
+  }
+
   visitPrintStatement(statement) {
     const value = this._evaluate(statement.expression);
     console.log(Interpreter._stringify(value));
@@ -104,6 +119,23 @@ class Interpreter {
     this._environment.assign(expression.name, value);
 
     return value;
+  }
+
+  visitLogicalExpression(expression) {
+    const left = this._evaluate(expression.left);
+
+    if(expression.operator.type === TokenType.OR) {
+      if(Interpreter._isTruthy(left)) {
+        return left;
+      }
+    }
+    else {
+      if(!Interpreter._isTruthy(left)) {
+        return left;
+      }
+    }
+
+    return this._evaluate(expression.right);
   }
 
   visitBinaryExpression(expression) {

@@ -5,12 +5,15 @@ const TokenType = require('./TokenType');
 
 const BlockStatement = require('./parsing/Statement/Block');
 const ExpressionStatement = require('./parsing/Statement/Expression');
+const IfStatement = require('./parsing/Statement/If');
 const PrintStatement = require('./parsing/Statement/Print');
 const VariableStatement = require('./parsing/Statement/Variable');
+const WhileStatement = require('./parsing/Statement/While');
 
 const AssignmentExpression = require('./parsing/Expression/Assignment');
 const BinaryExpression = require('./parsing/Expression/Binary');
 const GroupingExpression = require('./parsing/Expression/Grouping');
+const LogicalExpression = require('./parsing/Expression/Logical');
 const LiteralExpression = require('./parsing/Expression/Literal');
 const UnaryExpression = require('./parsing/Expression/Unary');
 const VariableExpression = require('./parsing/Expression/Variable');
@@ -140,15 +143,99 @@ class Parser {
   }
 
   _statement() {
+    if(this._match(TokenType.FOR)) {
+      return this._forStatement();
+    }
+    if(this._match(TokenType.IF)) {
+      return this._ifStatement();
+    }
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
-    else if(this._match(TokenType.LEFT_BRACE)) {
+    if(this._match(TokenType.WHILE)) {
+      return this._whileStatement();
+    }
+    if(this._match(TokenType.LEFT_BRACE)) {
       return new BlockStatement(this._blockStatement());
     }
     else {
       return this._expressionStatement();
     }
+  }
+
+  _forStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'for'.`);
+
+    let initializer;
+
+    if(this._match(TokenType.SEMICOLON)) {
+      initializer = null;
+    }
+    else if(this._match(TokenType.VAR)) {
+      initializer = this._variableDeclaration();
+    }
+    else {
+      initializer = this._expressionStatement();
+    }
+
+    let condition;
+
+    if(this._match(TokenType.SEMICOLON)) {
+      condition = null;
+    }
+    else {
+      condition = this._expression();
+      this._consume(TokenType.SEMICOLON, `Expect ';' after loop condition.`);
+    }
+
+    let increment;
+
+    if(this._match(TokenType.RIGHT_PAREN)) {
+      increment = null;
+    }
+    else {
+      increment = this._expression();
+      this._consume(TokenType.RIGHT_PAREN, `Expect ')' after for clauses.`);
+    }
+
+    let body = this._statement();
+
+    if(increment !== null) {
+      body = new BlockStatement([
+        body,
+        new ExpressionStatement(increment)
+      ]);
+    }
+
+    if (condition === null) {
+      condition = new LiteralExpression(true);
+    }
+
+    body = new WhileStatement(condition, body);
+
+    if (initializer !== null) {
+      body = new BlockStatement([
+        initializer,
+        body
+      ]);
+    }
+
+    return body;
+  }
+
+  _ifStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'if'.`);
+    const condition = this._expression();
+    this._consume(TokenType.RIGHT_PAREN, `Expect ')' after if condition.`);
+
+    const thenBranch = this._statement();
+    let elseBranch;
+
+    if(this._match(TokenType.ELSE)) {
+      elseBranch = this._statement();
+    }
+
+    return new IfStatement(condition, thenBranch, elseBranch);
   }
 
   _printStatement() {
@@ -157,6 +244,16 @@ class Parser {
     this._consume(TokenType.SEMICOLON, `Expect ';' after value.`);
 
     return new PrintStatement(value);
+  }
+
+  _whileStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'while'.`);
+    const condition = this._expression();
+    this._consume(TokenType.RIGHT_PAREN, `Expect ')' after while condition.`);
+
+    const body = this._statement();
+
+    return new WhileStatement(condition, body);
   }
 
   _blockStatement() {
@@ -184,7 +281,7 @@ class Parser {
   }
 
   _assignment() {
-    const expression = this._equality();
+    const expression = this._or();
 
     if(this._match(TokenType.EQUAL)) {
       const equals = this._previous();
@@ -197,6 +294,34 @@ class Parser {
       }
 
       this._error(equals, 'Invalid assignment target.');
+    }
+
+    return expression;
+  }
+
+  _or() {
+    let expression = this._and();
+
+    while(this._match(TokenType.OR)) {
+      const operator = this._previous();
+
+      const right = this._and();
+
+      expression = new LogicalExpression(expression, operator, right);
+    }
+
+    return expression;
+  }
+
+  _and() {
+    let expression = this._equality();
+
+    while(this._match(TokenType.AND)) {
+      const operator = this._previous();
+
+      const right = this._equality();
+
+      expression = new LogicalExpression(expression, operator, right);
     }
 
     return expression;
