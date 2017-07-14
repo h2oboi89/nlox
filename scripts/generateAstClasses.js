@@ -66,7 +66,8 @@ function main() {
         'Expression : expression',
         'If         : condition, thenBranch, elseBranch',
         'Print      : expression',
-        'Variable   : name, initializer'
+        'Variable   : name, initializer',
+        'While      : condition, body'
       ], 'Statement');
     })
     .catch((error) => {

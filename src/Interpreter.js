@@ -92,6 +92,12 @@ class Interpreter {
     }
   }
 
+  visitWhileStatement(statement) {
+    while(Interpreter._isTruthy(this._evaluate(statement.condition))) {
+      this._execute(statement.body);
+    }
+  }
+
   visitPrintStatement(statement) {
     const value = this._evaluate(statement.expression);
     console.log(Interpreter._stringify(value));

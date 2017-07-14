@@ -49,6 +49,10 @@ class AstPrinter {
     return this._parenthesize('print', statement.expression);
   }
 
+  visitWhileStatement(statement) {
+    return `( while ${statement.condition.accept(this)} ${statement.body.accept(this)} )`;
+  }
+
   visitVariableStatement(statement) {
     return this._parenthesize(`declare ${statement.name.lexeme}`, statement.initializer);
   }

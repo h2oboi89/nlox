@@ -28,21 +28,30 @@ describe('Parser - declaration', () => {
       );
     });
 
-    it('peek === PRINT', () => {
-      parseAndError(
-        'var 3 print bar;',
-        'NUMBER 3 3',
-        'Expect variable name.',
-        '( print ( var bar ) )'
-      );
-    });
-
     it('peek === IF', () => {
       parseAndError(
         'var 3 if (true) 1;',
         'NUMBER 3 3',
         'Expect variable name.',
         '( if true then ( statement 1 ) )'
+      );
+    });
+
+    it('peek === WHILE', () => {
+      parseAndError(
+        'var 3 while (true) 1;',
+        'NUMBER 3 3',
+        'Expect variable name.',
+        '( while true ( statement 1 ) )'
+      );
+    });
+
+    it('peek === PRINT', () => {
+      parseAndError(
+        'var 3 print bar;',
+        'NUMBER 3 3',
+        'Expect variable name.',
+        '( print ( var bar ) )'
       );
     });
 

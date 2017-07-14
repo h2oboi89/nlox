@@ -8,6 +8,7 @@ const ExpressionStatement = require('./parsing/Statement/Expression');
 const IfStatement = require('./parsing/Statement/If');
 const PrintStatement = require('./parsing/Statement/Print');
 const VariableStatement = require('./parsing/Statement/Variable');
+const WhileStatement = require('./parsing/Statement/While');
 
 const AssignmentExpression = require('./parsing/Expression/Assignment');
 const BinaryExpression = require('./parsing/Expression/Binary');
@@ -148,7 +149,10 @@ class Parser {
     if(this._match(TokenType.PRINT)) {
       return this._printStatement();
     }
-    else if(this._match(TokenType.LEFT_BRACE)) {
+    if(this._match(TokenType.WHILE)) {
+      return this._whileStatement();
+    }
+    if(this._match(TokenType.LEFT_BRACE)) {
       return new BlockStatement(this._blockStatement());
     }
     else {
@@ -177,6 +181,16 @@ class Parser {
     this._consume(TokenType.SEMICOLON, `Expect ';' after value.`);
 
     return new PrintStatement(value);
+  }
+
+  _whileStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'while'.`);
+    const condition = this._expression();
+    this._consume(TokenType.RIGHT_PAREN, `Expect ')' after while condition.`);
+
+    const body = this._statement();
+
+    return new WhileStatement(condition, body);
   }
 
   _blockStatement() {
