@@ -1,3 +1,4 @@
+// prints the first 21 elements in the Fibonacci sequence
 var a = 0;
 var b = 1;
 
