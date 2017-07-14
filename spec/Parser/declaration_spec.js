@@ -28,6 +28,15 @@ describe('Parser - declaration', () => {
       );
     });
 
+    it('peek === FOR', () => {
+      parseAndError(
+        'var 3 for(var i = 0; i < 10; i = i + 1) { print i; }',
+        'NUMBER 3 3',
+        'Expect variable name.',
+        '( block ( declare i 0 ) ; ( while ( < ( var i ) 10 ) ( block ( block ( print ( var i ) ) ) ; ( statement ( assign i ( + ( var i ) 1 ) ) ) ) ) )'
+      );
+    });
+
     it('peek === IF', () => {
       parseAndError(
         'var 3 if (true) 1;',
