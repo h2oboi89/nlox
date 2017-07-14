@@ -143,6 +143,9 @@ class Parser {
   }
 
   _statement() {
+    if(this._match(TokenType.FOR)) {
+      return this._forStatement();
+    }
     if(this._match(TokenType.IF)) {
       return this._ifStatement();
     }
@@ -158,6 +161,66 @@ class Parser {
     else {
       return this._expressionStatement();
     }
+  }
+
+  _forStatement() {
+    this._consume(TokenType.LEFT_PAREN, `Expect '(' after 'for'.`);
+
+    let initializer;
+
+    if(this._match(TokenType.SEMICOLON)) {
+      initializer = null;
+    }
+    else if(this._match(TokenType.VAR)) {
+      initializer = this._variableDeclaration();
+    }
+    else {
+      initializer = this._expressionStatement();
+    }
+
+    let condition;
+
+    if(this._match(TokenType.SEMICOLON)) {
+      condition = null;
+    }
+    else {
+      condition = this._expression();
+      this._consume(TokenType.SEMICOLON, `Expect ';' after loop condition.`);
+    }
+
+    let increment;
+
+    if(this._match(TokenType.RIGHT_PAREN)) {
+      increment = null;
+    }
+    else {
+      increment = this._expression();
+      this._consume(TokenType.RIGHT_PAREN, `Expect ')' after for clauses.`);
+    }
+
+    let body = this._statement();
+
+    if(increment !== null) {
+      body = new BlockStatement([
+        body,
+        new ExpressionStatement(increment)
+      ]);
+    }
+
+    if (condition === null) {
+      condition = new LiteralExpression(true);
+    }
+
+    body = new WhileStatement(condition, body);
+
+    if (initializer !== null) {
+      body = new BlockStatement([
+        initializer,
+        body
+      ]);
+    }
+
+    return body;
   }
 
   _ifStatement() {
