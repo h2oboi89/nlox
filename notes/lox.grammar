@@ -42,9 +42,13 @@ term        -> factor ( ( "-" | "+" ) factor )*
 factor      -> unary ( ( "/" | "*" ) unary )*
 
 unary       -> ( "!" | "-" ) unary
-            | primary
+            | call
 
 primary     -> NUMBER | STRING
             | "false" | "true" | "nil"
             | "(" expression ")"
             | IDENTIFIER
+
+arguments   -> expression ( "," expression )*
+
+call        -> primary ( "(" arguments? ")" )*

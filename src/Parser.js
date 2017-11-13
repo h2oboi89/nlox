@@ -12,6 +12,7 @@ const WhileStatement = require('./parsing/Statement/While');
 
 const AssignmentExpression = require('./parsing/Expression/Assignment');
 const BinaryExpression = require('./parsing/Expression/Binary');
+const CallExpression = require('./parsing/Expression/Call');
 const GroupingExpression = require('./parsing/Expression/Grouping');
 const LogicalExpression = require('./parsing/Expression/Logical');
 const LiteralExpression = require('./parsing/Expression/Literal');
@@ -207,13 +208,13 @@ class Parser {
       ]);
     }
 
-    if (condition === null) {
+    if(condition === null) {
       condition = new LiteralExpression(true);
     }
 
     body = new WhileStatement(condition, body);
 
-    if (initializer !== null) {
+    if(initializer !== null) {
       body = new BlockStatement([
         initializer,
         body
@@ -382,7 +383,7 @@ class Parser {
       return new UnaryExpression(operator, right);
     }
 
-    return this._primary();
+    return this._call();
   }
 
   _primary() {
@@ -395,15 +396,12 @@ class Parser {
     if(this._match(TokenType.NIL)) {
       return new LiteralExpression(null);
     }
-
     if(this._match(TokenType.NUMBER, TokenType.STRING)) {
       return new LiteralExpression(this._previous().literal);
     }
-
     if(this._match(TokenType.IDENTIFIER)) {
       return new VariableExpression(this._previous());
     }
-
     if(this._match(TokenType.LEFT_PAREN)) {
       const expression = this._expression();
       this._consume(TokenType.RIGHT_PAREN, `Expect ')' after expression.`);
@@ -411,6 +409,38 @@ class Parser {
     }
 
     throw this._error(this._peek(), 'Expect expression.');
+  }
+
+  _finishCall(callee) {
+    let args = [];
+
+    if(!this._check(TokenType.RIGHT_PAREN)) {
+      do {
+        if(args.length >= 8) {
+          this._error(this._peek(), "Cannot have more than 8 arguments.");
+        }
+        args.push(this._expression());
+      } while (this._match(TokenType.COMMA));
+    }
+
+    let paren = this._consume(TokenType.RIGHT_PAREN, `Expect ')' after arguments.`);
+
+    return new CallExpression(callee, paren, args);
+  }
+
+  _call() {
+    let expression = this._primary();
+
+    while(true) {
+      if(this._match(TokenType.LEFT_PAREN)) {
+        expression = this._finishCall(expression);
+      }
+      else {
+        break;
+      }
+    }
+
+    return expression;
   }
 
   /**

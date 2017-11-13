@@ -51,9 +51,10 @@ function main() {
       return generateAst([
         'Assignment : name, value',
         'Binary     : left, operator, right',
+        'Call       : callee, paren, args',
         'Grouping   : expression',
         'Literal    : value',
-        'Logical   : left, operator, right',
+        'Logical    : left, operator, right',
         'Unary      : operator, right',
         'Variable   : name'
       ], 'Expression');

@@ -66,6 +66,10 @@ class AstPrinter {
     return this._parenthesize(expression.operator.lexeme, expression.left, expression.right);
   }
 
+  visitCallExpression(expression) {
+    return this._parenthesize(`func::${expression.callee.name.lexeme}`, ...expression.args);
+  }
+
   visitGroupingExpression(expression) {
     return this._parenthesize('group', expression.expression);
   }
