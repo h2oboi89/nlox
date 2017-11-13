@@ -5,3 +5,4 @@ npm-debug.log
 build
 doc
 access_logs
+package-lock.json
