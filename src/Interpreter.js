@@ -182,6 +182,15 @@ class Interpreter {
     }
   }
 
+  visitCallExpression(expression) {
+    let callee = this._evaluate(expression.callee);
+
+    let args = expression.args.map((a) => this._evaluate(a));
+
+    // TODO: convert into callable???
+    callee.call(this, args);
+  }
+
   visitGroupingExpression(expression) {
     return this._evaluate(expression.expression);
   }
