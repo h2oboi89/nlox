@@ -148,13 +148,13 @@ class Interpreter {
         Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left - right;
       case TokenType.PLUS:
-        if(typeof left === 'string' || typeof right === 'string') {
+        if(typeof left === 'string' && typeof right === 'string') {
           return left + right;
         }
         if(typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        throw new RuntimeError(expression.operator, 'Operands must numbers or strings.');
+        throw new RuntimeError(expression.operator, 'Operands must be numbers or strings.');
       case TokenType.SLASH:
         Interpreter._CheckNumberOperands(expression.operator, left, right);
         return left / right;
